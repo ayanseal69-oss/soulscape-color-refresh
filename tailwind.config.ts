@@ -68,6 +68,14 @@ export default {
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
 			},
+			backgroundImage: {
+				'gradient-sea': 'var(--gradient-sea)',
+				'gradient-wave': 'var(--gradient-wave)',
+			},
+			boxShadow: {
+				'wave': 'var(--wave-shadow)',
+				'spiritual': 'var(--spiritual-glow)',
+			},
 			keyframes: {
 				'accordion-down': {
 					from: {
