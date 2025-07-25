@@ -13,14 +13,47 @@ import {
   Bookmark, 
   ExternalLink,
   Menu,
-  X 
+  X,
+  Sun,
+  Moon 
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [language, setLanguage] = useState("EN");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    const savedLanguage = localStorage.getItem('language');
+    if (savedTheme === 'dark') {
+      setIsDarkMode(true);
+      document.documentElement.classList.add('dark');
+    }
+    if (savedLanguage) {
+      setLanguage(savedLanguage);
+    }
+  }, []);
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+    if (!isDarkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  };
+
+  const toggleLanguage = () => {
+    const newLanguage = language === "EN" ? "हिं" : "EN";
+    setLanguage(newLanguage);
+    localStorage.setItem('language', newLanguage);
+  };
 
   const navigationItems = [
     { icon: Plus, label: "New Post", color: "text-primary", action: () => navigate("/new-post") },
@@ -114,8 +147,18 @@ const Index = () => {
           <a href="#" className="text-foreground hover:text-primary transition-colors">Contact</a>
         </nav>
         <div className="flex items-center gap-4">
-          <button className="text-foreground hover:text-primary transition-colors">🌞</button>
-          <span className="text-foreground text-sm">EN</span>
+          <button 
+            onClick={toggleDarkMode}
+            className="text-foreground hover:text-primary transition-colors p-2 rounded-lg hover:bg-primary/10"
+          >
+            {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
+          <button 
+            onClick={toggleLanguage}
+            className="text-foreground hover:text-primary transition-colors text-sm font-medium px-3 py-2 rounded-lg hover:bg-primary/10 border border-border/50"
+          >
+            {language}
+          </button>
           </div>
         </header>
 
