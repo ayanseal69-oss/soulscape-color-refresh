@@ -223,21 +223,21 @@ const Index = () => {
             {[
               { 
                 title: "Spirituality", 
-                icon: "🕉️", 
+                icon: "☯️", 
                 articles: "24 articles",
-                description: "Explore inner peace and connection"
+                description: "Explore inner peace and connection through Advaita Vedanta"
               },
               { 
                 title: "Philosophy", 
-                icon: "🧠", 
+                icon: "🤔", 
                 articles: "18 articles",
-                description: "Question, think, and understand"
+                description: "Question, think, and understand existence"
               },
               { 
                 title: "Psychology", 
-                icon: "🔮", 
+                icon: "🧠", 
                 articles: "32 articles",
-                description: "Understand the mind and behavior"
+                description: "Understand the mind and behavior patterns"
               }
             ].map((path, index) => (
               <Card key={index} className="text-center bg-card/60 backdrop-blur-sm border-border/50 hover:shadow-spiritual transition-all duration-300 group">
