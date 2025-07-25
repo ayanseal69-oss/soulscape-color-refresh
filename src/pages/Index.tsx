@@ -16,21 +16,23 @@ import {
   X 
 } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const navigate = useNavigate();
 
   const navigationItems = [
-    { icon: Plus, label: "New Post", color: "text-orange-500", action: () => console.log("New Post") },
-    { icon: FileText, label: "Posts", color: "text-slate-600", action: () => console.log("Posts") },
-    { icon: BarChart3, label: "Stats", color: "text-orange-500", action: () => console.log("Stats") },
-    { icon: MessageCircle, label: "Comments", color: "text-slate-600", action: () => console.log("Comments") },
-    { icon: DollarSign, label: "Earnings", color: "text-slate-600", action: () => console.log("Earnings") },
-    { icon: FileStack, label: "Pages", color: "text-slate-600", action: () => console.log("Pages") },
-    { icon: Layout, label: "Layout", color: "text-slate-600", action: () => console.log("Layout") },
-    { icon: Palette, label: "Theme", color: "text-slate-600", action: () => console.log("Theme") },
-    { icon: Settings, label: "Settings", color: "text-slate-600", action: () => console.log("Settings") },
-    { icon: Bookmark, label: "Reading List", color: "text-slate-600", action: () => console.log("Reading List") },
+    { icon: Plus, label: "New Post", color: "text-primary", action: () => navigate("/new-post") },
+    { icon: FileText, label: "Posts", color: "text-muted-foreground", action: () => console.log("Posts") },
+    { icon: BarChart3, label: "Stats", color: "text-primary", action: () => console.log("Stats") },
+    { icon: MessageCircle, label: "Comments", color: "text-muted-foreground", action: () => console.log("Comments") },
+    { icon: DollarSign, label: "Earnings", color: "text-muted-foreground", action: () => console.log("Earnings") },
+    { icon: FileStack, label: "Pages", color: "text-muted-foreground", action: () => console.log("Pages") },
+    { icon: Layout, label: "Layout", color: "text-muted-foreground", action: () => console.log("Layout") },
+    { icon: Palette, label: "Theme", color: "text-muted-foreground", action: () => console.log("Theme") },
+    { icon: Settings, label: "Settings", color: "text-muted-foreground", action: () => console.log("Settings") },
+    { icon: Bookmark, label: "Reading List", color: "text-muted-foreground", action: () => console.log("Reading List") },
     { icon: ExternalLink, label: "View blog", color: "text-primary", action: () => console.log("View blog") },
   ];
 
@@ -64,23 +66,21 @@ const Index = () => {
             </button>
           </div>
 
-          {/* Blog Domain */}
-          <div className="mb-6 p-3 bg-accent/30 rounded-lg">
-            <p className="text-sm text-muted-foreground">kundaliniyogaInIndia.blogspot.com</p>
-          </div>
 
           {/* Navigation Items */}
           <nav className="space-y-2">
             {navigationItems.map((item, index) => {
               const Icon = item.icon;
               return (
-                <button
+                  <button
                   key={index}
                   onClick={item.action}
-                  className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left hover:bg-accent/50 transition-colors group"
+                  className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left hover:bg-primary/10 transition-all duration-300 group border border-transparent hover:border-primary/20 hover:shadow-lg hover:shadow-primary/10"
                 >
-                  <Icon size={18} className={`${item.color} group-hover:text-primary`} />
-                  <span className="text-card-foreground group-hover:text-primary font-medium">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center group-hover:from-primary/30 group-hover:to-primary/20 transition-all duration-300">
+                    <Icon size={16} className={`${item.color} group-hover:text-primary transition-colors duration-300`} />
+                  </div>
+                  <span className="text-card-foreground group-hover:text-primary font-medium transition-colors duration-300">
                     {item.label}
                   </span>
                 </button>
