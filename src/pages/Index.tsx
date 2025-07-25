@@ -1,17 +1,113 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { 
+  Plus, 
+  FileText, 
+  BarChart3, 
+  MessageCircle, 
+  DollarSign, 
+  FileStack, 
+  Layout, 
+  Palette, 
+  Settings, 
+  Bookmark, 
+  ExternalLink,
+  Menu,
+  X 
+} from "lucide-react";
+import { useState } from "react";
 
 const Index = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const navigationItems = [
+    { icon: Plus, label: "New Post", color: "text-orange-500", action: () => console.log("New Post") },
+    { icon: FileText, label: "Posts", color: "text-slate-600", action: () => console.log("Posts") },
+    { icon: BarChart3, label: "Stats", color: "text-orange-500", action: () => console.log("Stats") },
+    { icon: MessageCircle, label: "Comments", color: "text-slate-600", action: () => console.log("Comments") },
+    { icon: DollarSign, label: "Earnings", color: "text-slate-600", action: () => console.log("Earnings") },
+    { icon: FileStack, label: "Pages", color: "text-slate-600", action: () => console.log("Pages") },
+    { icon: Layout, label: "Layout", color: "text-slate-600", action: () => console.log("Layout") },
+    { icon: Palette, label: "Theme", color: "text-slate-600", action: () => console.log("Theme") },
+    { icon: Settings, label: "Settings", color: "text-slate-600", action: () => console.log("Settings") },
+    { icon: Bookmark, label: "Reading List", color: "text-slate-600", action: () => console.log("Reading List") },
+    { icon: ExternalLink, label: "View blog", color: "text-primary", action: () => console.log("View blog") },
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-sea">
-      {/* Header */}
-      <header className="flex items-center justify-between p-6 bg-background/10 backdrop-blur-sm">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-sm">RP</span>
+    <div className="min-h-screen bg-gradient-sea relative">
+      {/* Mobile Sidebar Overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden" 
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <div className={`fixed left-0 top-0 h-full w-64 bg-card/95 backdrop-blur-sm border-r border-border/50 z-50 transform transition-transform duration-300 ease-in-out ${
+        sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+      } lg:translate-x-0`}>
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+                <span className="text-primary-foreground font-bold text-sm">RP</span>
+              </div>
+              <span className="text-card-foreground font-semibold">Reflective Paths</span>
+            </div>
+            <button 
+              onClick={() => setSidebarOpen(false)}
+              className="lg:hidden text-card-foreground hover:text-primary"
+            >
+              <X size={20} />
+            </button>
           </div>
-          <span className="text-foreground font-semibold">Reflective Paths</span>
+
+          {/* Blog Domain */}
+          <div className="mb-6 p-3 bg-accent/30 rounded-lg">
+            <p className="text-sm text-muted-foreground">kundaliniyogaInIndia.blogspot.com</p>
+          </div>
+
+          {/* Navigation Items */}
+          <nav className="space-y-2">
+            {navigationItems.map((item, index) => {
+              const Icon = item.icon;
+              return (
+                <button
+                  key={index}
+                  onClick={item.action}
+                  className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left hover:bg-accent/50 transition-colors group"
+                >
+                  <Icon size={18} className={`${item.color} group-hover:text-primary`} />
+                  <span className="text-card-foreground group-hover:text-primary font-medium">
+                    {item.label}
+                  </span>
+                </button>
+              );
+            })}
+          </nav>
         </div>
+      </div>
+
+      {/* Main Content */}
+      <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-64'}`}>
+        {/* Header */}
+        <header className="flex items-center justify-between p-6 bg-background/10 backdrop-blur-sm">
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="lg:hidden text-foreground hover:text-primary"
+            >
+              <Menu size={24} />
+            </button>
+            <div className="flex items-center gap-2 lg:hidden">
+              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+                <span className="text-primary-foreground font-bold text-sm">RP</span>
+              </div>
+              <span className="text-foreground font-semibold">Reflective Paths</span>
+            </div>
+          </div>
         <nav className="hidden md:flex items-center gap-6">
           <a href="#" className="text-foreground hover:text-primary transition-colors">Home</a>
           <a href="#" className="text-foreground hover:text-primary transition-colors">About</a>
@@ -20,8 +116,8 @@ const Index = () => {
         <div className="flex items-center gap-4">
           <button className="text-foreground hover:text-primary transition-colors">🌞</button>
           <span className="text-foreground text-sm">EN</span>
-        </div>
-      </header>
+          </div>
+        </header>
 
       {/* Hero Section with Wave Effect */}
       <section className="relative min-h-[70vh] flex items-center justify-center text-center px-6">
@@ -209,8 +305,9 @@ const Index = () => {
           <div className="mt-12 pt-8 border-t border-foreground/20 text-foreground/60">
             © 2024 Blog. All rights reserved.
           </div>
-        </div>
-      </footer>
+          </div>
+        </footer>
+      </div>
     </div>
   );
 };
