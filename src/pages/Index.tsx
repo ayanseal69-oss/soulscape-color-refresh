@@ -57,7 +57,7 @@ const Index = () => {
 
   const translations = {
     EN: {
-      title: "Soul Scapes",
+      title: "Skyscape",
       subtitle: "A Journey Within: Exploring Spirituality, Philosophy & Psychology",
       home: "Home",
       about: "About",
@@ -79,11 +79,11 @@ const Index = () => {
       philosophy: "Philosophy",
       psychology: "Psychology",
       beginJourney: "Begin Your Journey →",
-      blogAddress: "Your blog address: soulscapes.lovable.app",
-      brandName: "Soul Scapes"
+      blogAddress: "Your blog address: skyscape.lovable.app",
+      brandName: "Skyscape"
     },
     বাং: {
-      title: "আত্মার দৃশ্যপট",
+      title: "আকাশের দৃশ্যপট",
       subtitle: "অন্তর্যাত্রা: আধ্যাত্মিকতা, দর্শন ও মনোবিজ্ঞান অন্বেষণ",
       home: "হোম",
       about: "সম্পর্কে",
@@ -105,8 +105,8 @@ const Index = () => {
       philosophy: "দর্শন",
       psychology: "মনোবিজ্ঞান",
       beginJourney: "আপনার যাত্রা শুরু করুন →",
-      blogAddress: "আপনার ব্লগ ঠিকানা: soulscapes.lovable.app",
-      brandName: "আত্মার দৃশ্যপট"
+      blogAddress: "আপনার ব্লগ ঠিকানা: skyscape.lovable.app",
+      brandName: "আকাশের দৃশ্যপট"
     }
   };
 

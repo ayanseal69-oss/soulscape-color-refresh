@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { 
   ArrowLeft, 
   Image, 
@@ -14,7 +15,7 @@ import {
   List, 
   Save,
   Eye,
-  Send,
+  Play,
   X
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -29,22 +30,43 @@ const NewPost = () => {
   const [imagePreviewUrls, setImagePreviewUrls] = useState<string[]>([]);
   const [category, setCategory] = useState("spirituality");
   const [status, setStatus] = useState("draft");
+  const [showPreview, setShowPreview] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
     if (files.length > 0) {
-      const newImages = [...selectedImages, ...files];
-      setSelectedImages(newImages);
-      
-      // Create preview URLs for new images
-      const newPreviewUrls = files.map(file => URL.createObjectURL(file));
-      setImagePreviewUrls(prev => [...prev, ...newPreviewUrls]);
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const imageUrl = e.target?.result as string;
+          insertImageAtCursor(`![${file.name}](${imageUrl})`);
+        };
+        reader.readAsDataURL(file);
+      });
       
       toast({
         title: "Images Added",
-        description: `${files.length} image(s) added successfully`,
+        description: `${files.length} image(s) inserted into content`,
       });
     }
+  };
+
+  const insertImageAtCursor = (imageMarkdown: string) => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const newContent = content.substring(0, start) + '\n' + imageMarkdown + '\n' + content.substring(end);
+    
+    setContent(newContent);
+    
+    // Set cursor position after the inserted image
+    setTimeout(() => {
+      textarea.selectionStart = textarea.selectionEnd = start + imageMarkdown.length + 2;
+      textarea.focus();
+    }, 0);
   };
 
   const removeImage = (index: number) => {
@@ -118,10 +140,27 @@ const NewPost = () => {
       return;
     }
     
-    console.log("Preview post:", { title, content, tags, images: selectedImages });
-    toast({
-      title: "Preview",
-      description: "Preview functionality would open here",
+    setShowPreview(true);
+  };
+
+  const renderPreviewContent = () => {
+    return content.split('\n').map((line, index) => {
+      // Handle image markdown
+      const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/;
+      const match = line.match(imageRegex);
+      
+      if (match) {
+        return (
+          <img 
+            key={index}
+            src={match[2]} 
+            alt={match[1]} 
+            className="max-w-full h-auto my-4 rounded-lg"
+          />
+        );
+      }
+      
+      return <p key={index} className="mb-2">{line}</p>;
     });
   };
 
@@ -140,7 +179,7 @@ const NewPost = () => {
               <ArrowLeft size={16} className="mr-2" />
               Back to Dashboard
             </Button>
-            <h1 className="text-2xl font-bold text-foreground">Create New Post</h1>
+            <h1 className="text-2xl font-bold text-foreground">Create New Post - Skyscape</h1>
           </div>
           <div className="flex gap-2">
             <Button
@@ -160,7 +199,7 @@ const NewPost = () => {
               Save Draft
             </Button>
             <Button onClick={handlePublish} className="bg-primary hover:bg-primary/90">
-              <Send size={16} className="mr-2" />
+              <Play size={16} className="mr-2" />
               Publish Post
             </Button>
           </div>
@@ -217,40 +256,19 @@ const NewPost = () => {
                 <div>
                   <Label htmlFor="content" className="text-card-foreground">Content</Label>
                   <Textarea
+                    ref={textareaRef}
                     id="content"
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
-                    placeholder="Write your post content here..."
+                    placeholder="Write your post content here... Click the image icon to insert images at cursor position."
                     rows={15}
                     className="mt-2 bg-background/50 border-border/50 resize-none"
                   />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Tip: Click where you want to insert an image, then click the image icon
+                  </p>
                 </div>
 
-                {selectedImages.length > 0 && (
-                  <div className="space-y-4">
-                    <p className="text-sm text-muted-foreground">Attached Images ({selectedImages.length}):</p>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      {imagePreviewUrls.map((url, index) => (
-                        <div key={index} className="relative group">
-                          <img
-                            src={url}
-                            alt={selectedImages[index].name}
-                            className="w-full h-32 object-cover rounded-lg border border-border/50"
-                          />
-                          <button
-                            onClick={() => removeImage(index)}
-                            className="absolute top-2 right-2 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                          >
-                            <X size={16} />
-                          </button>
-                          <p className="text-xs text-muted-foreground mt-1 truncate">
-                            {selectedImages[index].name}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </CardContent>
             </Card>
           </div>
@@ -318,6 +336,27 @@ const NewPost = () => {
             </Card>
           </div>
         </div>
+
+        {/* Preview Dialog */}
+        <Dialog open={showPreview} onOpenChange={setShowPreview}>
+          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold">{title}</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="flex gap-2 flex-wrap">
+                {tags.split(',').filter(tag => tag.trim()).map((tag, index) => (
+                  <span key={index} className="px-2 py-1 bg-primary/10 text-primary rounded-md text-sm">
+                    {tag.trim()}
+                  </span>
+                ))}
+              </div>
+              <div className="prose prose-lg max-w-none">
+                {renderPreviewContent()}
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
