@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 import { 
   ArrowLeft, 
   Image, 
@@ -12,33 +13,116 @@ import {
   Link, 
   List, 
   Save,
-  Eye
+  Eye,
+  Send,
+  X
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const NewPost = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tags, setTags] = useState("");
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  const [imagePreviewUrls, setImagePreviewUrls] = useState<string[]>([]);
+  const [category, setCategory] = useState("spirituality");
+  const [status, setStatus] = useState("draft");
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setSelectedImage(file);
+    const files = Array.from(event.target.files || []);
+    if (files.length > 0) {
+      const newImages = [...selectedImages, ...files];
+      setSelectedImages(newImages);
+      
+      // Create preview URLs for new images
+      const newPreviewUrls = files.map(file => URL.createObjectURL(file));
+      setImagePreviewUrls(prev => [...prev, ...newPreviewUrls]);
+      
+      toast({
+        title: "Images Added",
+        description: `${files.length} image(s) added successfully`,
+      });
     }
   };
 
+  const removeImage = (index: number) => {
+    const newImages = selectedImages.filter((_, i) => i !== index);
+    const newPreviewUrls = imagePreviewUrls.filter((_, i) => i !== index);
+    
+    // Cleanup old URL
+    URL.revokeObjectURL(imagePreviewUrls[index]);
+    
+    setSelectedImages(newImages);
+    setImagePreviewUrls(newPreviewUrls);
+  };
+
   const handleSave = () => {
-    console.log("Saving post:", { title, content, tags, image: selectedImage });
-    // Here you would typically save to a backend
+    if (!title.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter a title for your post",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (!content.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter some content for your post",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const postData = {
+      title,
+      content,
+      tags: tags.split(',').map(tag => tag.trim()),
+      images: selectedImages,
+      category,
+      status,
+      createdAt: new Date().toISOString()
+    };
+    
+    console.log("Saving post:", postData);
+    
+    // Save to localStorage for demo purposes
+    const existingPosts = JSON.parse(localStorage.getItem('blog-posts') || '[]');
+    const newPost = { ...postData, id: Date.now() };
+    existingPosts.push(newPost);
+    localStorage.setItem('blog-posts', JSON.stringify(existingPosts));
+    
+    toast({
+      title: "Post Saved",
+      description: `Post "${title}" has been saved as ${status}`,
+    });
+    
     navigate("/");
   };
 
+  const handlePublish = () => {
+    setStatus("published");
+    setTimeout(() => handleSave(), 100);
+  };
+
   const handlePreview = () => {
-    console.log("Preview post:", { title, content, tags });
-    // Here you would show a preview modal or navigate to preview page
+    if (!title.trim() || !content.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter title and content to preview",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    console.log("Preview post:", { title, content, tags, images: selectedImages });
+    toast({
+      title: "Preview",
+      description: "Preview functionality would open here",
+    });
   };
 
   return (
@@ -67,9 +151,17 @@ const NewPost = () => {
               <Eye size={16} className="mr-2" />
               Preview
             </Button>
-            <Button onClick={handleSave} className="bg-primary hover:bg-primary/90">
+            <Button 
+              variant="outline"
+              onClick={handleSave} 
+              className="border-border/50 bg-card/80 backdrop-blur-sm hover:bg-card"
+            >
               <Save size={16} className="mr-2" />
-              Save Post
+              Save Draft
+            </Button>
+            <Button onClick={handlePublish} className="bg-primary hover:bg-primary/90">
+              <Send size={16} className="mr-2" />
+              Publish Post
             </Button>
           </div>
         </div>
@@ -115,6 +207,7 @@ const NewPost = () => {
                       id="image-upload"
                       type="file"
                       accept="image/*"
+                      multiple
                       onChange={handleImageUpload}
                       className="hidden"
                     />
@@ -133,10 +226,29 @@ const NewPost = () => {
                   />
                 </div>
 
-                {selectedImage && (
-                  <div className="p-4 border border-border/50 rounded-lg bg-background/30">
-                    <p className="text-sm text-muted-foreground mb-2">Selected Image:</p>
-                    <p className="text-card-foreground">{selectedImage.name}</p>
+                {selectedImages.length > 0 && (
+                  <div className="space-y-4">
+                    <p className="text-sm text-muted-foreground">Attached Images ({selectedImages.length}):</p>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      {imagePreviewUrls.map((url, index) => (
+                        <div key={index} className="relative group">
+                          <img
+                            src={url}
+                            alt={selectedImages[index].name}
+                            className="w-full h-32 object-cover rounded-lg border border-border/50"
+                          />
+                          <button
+                            onClick={() => removeImage(index)}
+                            className="absolute top-2 right-2 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <X size={16} />
+                          </button>
+                          <p className="text-xs text-muted-foreground mt-1 truncate">
+                            {selectedImages[index].name}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
               </CardContent>
@@ -164,7 +276,11 @@ const NewPost = () => {
 
                 <div className="space-y-2">
                   <Label className="text-card-foreground">Category</Label>
-                  <select className="w-full p-2 rounded-md bg-background/50 border border-border/50 text-card-foreground">
+                  <select 
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    className="w-full p-2 rounded-md bg-background/50 border border-border/50 text-card-foreground"
+                  >
                     <option value="spirituality">Spirituality</option>
                     <option value="philosophy">Philosophy</option>
                     <option value="psychology">Psychology</option>
@@ -174,7 +290,11 @@ const NewPost = () => {
 
                 <div className="space-y-2">
                   <Label className="text-card-foreground">Status</Label>
-                  <select className="w-full p-2 rounded-md bg-background/50 border border-border/50 text-card-foreground">
+                  <select 
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                    className="w-full p-2 rounded-md bg-background/50 border border-border/50 text-card-foreground"
+                  >
                     <option value="draft">Draft</option>
                     <option value="published">Published</option>
                     <option value="scheduled">Scheduled</option>

@@ -50,23 +50,80 @@ const Index = () => {
   };
 
   const toggleLanguage = () => {
-    const newLanguage = language === "EN" ? "हिं" : "EN";
+    const newLanguage = language === "EN" ? "বাং" : "EN";
     setLanguage(newLanguage);
     localStorage.setItem('language', newLanguage);
   };
 
+  const translations = {
+    EN: {
+      title: "Soul Scapes",
+      subtitle: "A Journey Within: Exploring Spirituality, Philosophy & Psychology",
+      home: "Home",
+      about: "About",
+      contact: "Contact",
+      newPost: "New Post",
+      posts: "Posts",
+      stats: "Stats",
+      comments: "Comments",
+      earnings: "Earnings",
+      pages: "Pages",
+      layout: "Layout",
+      theme: "Theme",
+      settings: "Settings",
+      readingList: "Reading List",
+      viewBlog: "View Blog",
+      featuredReflections: "Featured Reflections",
+      pathsOfExploration: "Paths of Exploration",
+      spirituality: "Spirituality",
+      philosophy: "Philosophy",
+      psychology: "Psychology",
+      beginJourney: "Begin Your Journey →",
+      blogAddress: "Your blog address: soulscapes.lovable.app",
+      brandName: "Soul Scapes"
+    },
+    বাং: {
+      title: "আত্মার দৃশ্যপট",
+      subtitle: "অন্তর্যাত্রা: আধ্যাত্মিকতা, দর্শন ও মনোবিজ্ঞান অন্বেষণ",
+      home: "হোম",
+      about: "সম্পর্কে",
+      contact: "যোগাযোগ",
+      newPost: "নতুন পোস্ট",
+      posts: "পোস্টসমূহ",
+      stats: "পরিসংখ্যান",
+      comments: "মন্তব্য",
+      earnings: "আয়",
+      pages: "পৃষ্ঠা",
+      layout: "লেআউট",
+      theme: "থিম",
+      settings: "সেটিংস",
+      readingList: "পঠন তালিকা",
+      viewBlog: "ব্লগ দেখুন",
+      featuredReflections: "বিশেষ প্রতিফলন",
+      pathsOfExploration: "অন্বেষণের পথ",
+      spirituality: "আধ্যাত্মিকতা",
+      philosophy: "দর্শন",
+      psychology: "মনোবিজ্ঞান",
+      beginJourney: "আপনার যাত্রা শুরু করুন →",
+      blogAddress: "আপনার ব্লগ ঠিকানা: soulscapes.lovable.app",
+      brandName: "আত্মার দৃশ্যপট"
+    }
+  };
+
+  const t = translations[language];
+
   const navigationItems = [
-    { icon: Plus, label: "New Post", color: "text-primary", action: () => navigate("/new-post") },
-    { icon: FileText, label: "Posts", color: "text-muted-foreground", action: () => console.log("Posts") },
-    { icon: BarChart3, label: "Stats", color: "text-primary", action: () => console.log("Stats") },
-    { icon: MessageCircle, label: "Comments", color: "text-muted-foreground", action: () => console.log("Comments") },
-    { icon: DollarSign, label: "Earnings", color: "text-muted-foreground", action: () => console.log("Earnings") },
-    { icon: FileStack, label: "Pages", color: "text-muted-foreground", action: () => console.log("Pages") },
-    { icon: Layout, label: "Layout", color: "text-muted-foreground", action: () => console.log("Layout") },
-    { icon: Palette, label: "Theme", color: "text-muted-foreground", action: () => console.log("Theme") },
-    { icon: Settings, label: "Settings", color: "text-muted-foreground", action: () => console.log("Settings") },
-    { icon: Bookmark, label: "Reading List", color: "text-muted-foreground", action: () => console.log("Reading List") },
-    { icon: ExternalLink, label: "View blog", color: "text-primary", action: () => console.log("View blog") },
+    { icon: Plus, label: t.newPost, color: "text-primary", action: () => navigate("/new-post") },
+    { icon: FileText, label: t.posts, color: "text-muted-foreground", action: () => console.log("Posts") },
+    { icon: BarChart3, label: t.stats, color: "text-primary", action: () => console.log("Stats") },
+    { icon: MessageCircle, label: t.comments, color: "text-muted-foreground", action: () => console.log("Comments") },
+    { icon: DollarSign, label: t.earnings, color: "text-muted-foreground", action: () => console.log("Earnings") },
+    { icon: FileStack, label: t.pages, color: "text-muted-foreground", action: () => console.log("Pages") },
+    { icon: Layout, label: t.layout, color: "text-muted-foreground", action: () => console.log("Layout") },
+    { icon: Palette, label: t.theme, color: "text-muted-foreground", action: () => console.log("Theme") },
+    { icon: Settings, label: t.settings, color: "text-muted-foreground", action: () => console.log("Settings") },
+    { icon: Bookmark, label: t.readingList, color: "text-muted-foreground", action: () => console.log("Reading List") },
+    { icon: ExternalLink, label: t.viewBlog, color: "text-primary", action: () => console.log("View blog") },
   ];
 
   return (
@@ -89,7 +146,7 @@ const Index = () => {
               <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
                 <span className="text-primary-foreground font-bold text-sm">RP</span>
               </div>
-              <span className="text-card-foreground font-semibold">Reflective Paths</span>
+              <span className="text-card-foreground font-semibold">{t.brandName}</span>
             </div>
             <button 
               onClick={() => setSidebarOpen(false)}
@@ -138,13 +195,13 @@ const Index = () => {
               <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
                 <span className="text-primary-foreground font-bold text-sm">RP</span>
               </div>
-              <span className="text-foreground font-semibold">Reflective Paths</span>
+              <span className="text-foreground font-semibold">{t.brandName}</span>
             </div>
           </div>
         <nav className="hidden md:flex items-center gap-6">
-          <a href="#" className="text-foreground hover:text-primary transition-colors">Home</a>
-          <a href="#" className="text-foreground hover:text-primary transition-colors">About</a>
-          <a href="#" className="text-foreground hover:text-primary transition-colors">Contact</a>
+          <a href="#" className="text-foreground hover:text-primary transition-colors">{t.home}</a>
+          <a href="#" className="text-foreground hover:text-primary transition-colors">{t.about}</a>
+          <a href="#" className="text-foreground hover:text-primary transition-colors">{t.contact}</a>
         </nav>
         <div className="flex items-center gap-4">
           <button 
@@ -187,11 +244,14 @@ const Index = () => {
 
         <div className="relative z-10 max-w-4xl">
           <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-4 drop-shadow-lg">
-            Reflective Paths
+            {t.title}
           </h1>
           <p className="text-xl text-foreground/80 mb-8 max-w-2xl mx-auto">
-            A Journey Within: Exploring Spirituality, Philosophy & Psychology
+            {t.subtitle}
           </p>
+          <div className="mt-8 p-4 bg-primary/10 rounded-lg border border-primary/20 max-w-md mx-auto mb-8">
+            <p className="text-primary font-medium text-lg">{t.blogAddress}</p>
+          </div>
           <div className="flex items-center justify-center gap-4 mb-8">
             <div className="w-6 h-6 rounded-full bg-primary/30 animate-pulse"></div>
             <div className="w-4 h-4 rounded-full bg-primary/50 animate-pulse delay-100"></div>
@@ -200,7 +260,7 @@ const Index = () => {
             size="lg" 
             className="bg-primary/90 hover:bg-primary text-primary-foreground shadow-wave transition-all duration-300 hover:shadow-spiritual"
           >
-            Begin Your Journey →
+            {t.beginJourney}
           </Button>
         </div>
       </section>
@@ -209,7 +269,7 @@ const Index = () => {
       <section className="py-16 px-6 bg-background/5 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold text-center text-foreground mb-12">
-            Featured Reflections
+            {t.featuredReflections}
           </h2>
           <div className="grid md:grid-cols-3 gap-6">
             {[
@@ -247,7 +307,7 @@ const Index = () => {
                     {post.excerpt}
                   </p>
                   <Button variant="secondary" size="sm">
-                    Begin Your Journey
+                    {t.beginJourney.replace(' →', '')}
                   </Button>
                 </CardContent>
               </Card>
@@ -260,27 +320,27 @@ const Index = () => {
       <section className="py-16 px-6">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-bold text-center text-foreground mb-12">
-            Paths of Exploration
+            {t.pathsOfExploration}
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
             {[
               { 
-                title: "Spirituality", 
+                title: t.spirituality, 
                 icon: "☯️", 
-                articles: "24 articles",
-                description: "Explore inner peace and connection through Advaita Vedanta"
+                articles: language === "EN" ? "24 articles" : "২৪টি নিবন্ধ",
+                description: language === "EN" ? "Explore inner peace and connection through Advaita Vedanta" : "অদ্বৈত বেদান্তের মাধ্যমে অন্তর্শান্তি ও সংযোগ অন্বেষণ করুন"
               },
               { 
-                title: "Philosophy", 
+                title: t.philosophy, 
                 icon: "🤔", 
-                articles: "18 articles",
-                description: "Question, think, and understand existence"
+                articles: language === "EN" ? "18 articles" : "১৮টি নিবন্ধ",
+                description: language === "EN" ? "Question, think, and understand existence" : "প্রশ্ন করুন, চিন্তা করুন এবং অস্তিত্ব বুঝুন"
               },
               { 
-                title: "Psychology", 
+                title: t.psychology, 
                 icon: "🧠", 
-                articles: "32 articles",
-                description: "Understand the mind and behavior patterns"
+                articles: language === "EN" ? "32 articles" : "৩২টি নিবন্ধ",
+                description: language === "EN" ? "Understand the mind and behavior patterns" : "মন এবং আচরণের ধরন বুঝুন"
               }
             ].map((path, index) => (
               <Card key={index} className="text-center bg-card/60 backdrop-blur-sm border-border/50 hover:shadow-spiritual transition-all duration-300 group">
