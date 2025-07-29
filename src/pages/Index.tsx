@@ -1,417 +1,355 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { 
-  Plus, 
-  FileText, 
-  BarChart3, 
-  MessageCircle, 
-  DollarSign, 
-  FileStack, 
-  Layout, 
-  Palette, 
-  Settings, 
-  Bookmark, 
-  ExternalLink,
-  Menu,
-  X,
-  Sun,
-  Moon 
-} from "lucide-react";
 import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { 
+  PenTool, 
+  BarChart3, 
+  MessageSquare, 
+  DollarSign, 
+  FileText, 
+  Layout,
+  Palette,
+  Settings,
+  ExternalLink,
+  BookOpen,
+  Moon,
+  Sun,
+  Languages,
+  Home,
+  Eye,
+  Star,
+  TrendingUp,
+  Calendar,
+  User,
+  Clock,
+  ArrowRight
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarTrigger,
+  useSidebar,
+} from "@/components/ui/sidebar";
+import { useTheme } from "next-themes";
+
+interface BlogPost {
+  id: number;
+  title: string;
+  content: string;
+  tags: string[];
+  category: string;
+  status: string;
+  createdAt: string;
+}
+
+const menuItems = [
+  { title: "New Post", url: "/new-post", icon: PenTool, englishTitle: "New Post", banglaTitle: "নতুন পোস্ট" },
+  { title: "Posts", url: "/posts", icon: FileText, englishTitle: "Posts", banglaTitle: "পোস্ট সমূহ" },
+  { title: "Stats", url: "/stats", icon: BarChart3, englishTitle: "Stats", banglaTitle: "পরিসংখ্যান" },
+  { title: "Comments", url: "/comments", icon: MessageSquare, englishTitle: "Comments", banglaTitle: "মন্তব্য" },
+  { title: "Earnings", url: "/earnings", icon: DollarSign, englishTitle: "Earnings", banglaTitle: "আয়" },
+  { title: "Pages", url: "/pages", icon: Layout, englishTitle: "Pages", banglaTitle: "পেজ সমূহ" },
+  { title: "Layout", url: "/layout", icon: Layout, englishTitle: "Layout", banglaTitle: "লেআউট" },
+  { title: "Theme", url: "/theme", icon: Palette, englishTitle: "Theme", banglaTitle: "থিম" },
+  { title: "Settings", url: "/settings", icon: Settings, englishTitle: "Settings", banglaTitle: "সেটিংস" },
+  { title: "View Blog", url: "/view-blog", icon: ExternalLink, englishTitle: "View Blog", banglaTitle: "ব্লগ দেখুন" },
+  { title: "Reading List", url: "/reading-list", icon: BookOpen, englishTitle: "Reading List", banglaTitle: "পঠন তালিকা" },
+];
 
 const Index = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const [language, setLanguage] = useState("EN");
   const navigate = useNavigate();
+  const { setTheme, theme } = useTheme();
+  const [language, setLanguage] = useState<"en" | "bn">("en");
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [showAllPosts, setShowAllPosts] = useState(false);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    const savedLanguage = localStorage.getItem('language');
-    if (savedTheme === 'dark') {
-      setIsDarkMode(true);
-      document.documentElement.classList.add('dark');
-    }
-    if (savedLanguage) {
-      setLanguage(savedLanguage);
-    }
+    const savedPosts = JSON.parse(localStorage.getItem('blog-posts') || '[]');
+    const publishedPosts = savedPosts.filter((post: BlogPost) => post.status === 'published');
+    setPosts(publishedPosts.sort((a: BlogPost, b: BlogPost) => 
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    ));
   }, []);
 
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-    if (!isDarkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  };
-
   const toggleLanguage = () => {
-    const newLanguage = language === "EN" ? "বাং" : "EN";
-    setLanguage(newLanguage);
-    localStorage.setItem('language', newLanguage);
+    setLanguage(prev => prev === "en" ? "bn" : "en");
   };
 
-  const translations = {
-    EN: {
-      title: "Skyscape",
-      subtitle: "A Journey Within: Exploring Spirituality, Philosophy & Psychology",
-      home: "Home",
-      about: "About",
-      contact: "Contact",
-      newPost: "New Post",
-      posts: "Posts",
-      stats: "Stats",
-      comments: "Comments",
-      earnings: "Earnings",
-      pages: "Pages",
-      layout: "Layout",
-      theme: "Theme",
-      settings: "Settings",
-      readingList: "Reading List",
-      viewBlog: "View Blog",
-      featuredReflections: "Featured Reflections",
-      pathsOfExploration: "Paths of Exploration",
-      spirituality: "Spirituality",
-      philosophy: "Philosophy",
-      psychology: "Psychology",
-      beginJourney: "Begin Your Journey →",
-      blogAddress: "Your blog address: skyscape.lovable.app",
-      brandName: "Skyscape"
-    },
-    বাং: {
-      title: "আকাশের দৃশ্যপট",
-      subtitle: "অন্তর্যাত্রা: আধ্যাত্মিকতা, দর্শন ও মনোবিজ্ঞান অন্বেষণ",
-      home: "হোম",
-      about: "সম্পর্কে",
-      contact: "যোগাযোগ",
-      newPost: "নতুন পোস্ট",
-      posts: "পোস্টসমূহ",
-      stats: "পরিসংখ্যান",
-      comments: "মন্তব্য",
-      earnings: "আয়",
-      pages: "পৃষ্ঠা",
-      layout: "লেআউট",
-      theme: "থিম",
-      settings: "সেটিংস",
-      readingList: "পঠন তালিকা",
-      viewBlog: "ব্লগ দেখুন",
-      featuredReflections: "বিশেষ প্রতিফলন",
-      pathsOfExploration: "অন্বেষণের পথ",
-      spirituality: "আধ্যাত্মিকতা",
-      philosophy: "দর্শন",
-      psychology: "মনোবিজ্ঞান",
-      beginJourney: "আপনার যাত্রা শুরু করুন →",
-      blogAddress: "আপনার ব্লগ ঠিকানা: skyscape.lovable.app",
-      brandName: "আকাশের দৃশ্যপট"
-    }
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
   };
 
-  const t = translations[language];
+  const getExcerpt = (content: string, maxLength: number = 150) => {
+    const textContent = content.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '').trim();
+    return textContent.length > maxLength 
+      ? textContent.substring(0, maxLength) + '...' 
+      : textContent;
+  };
 
-  const navigationItems = [
-    { icon: Plus, label: t.newPost, color: "text-primary", action: () => navigate("/new-post") },
-    { icon: FileText, label: t.posts, color: "text-muted-foreground", action: () => console.log("Posts") },
-    { icon: BarChart3, label: t.stats, color: "text-primary", action: () => console.log("Stats") },
-    { icon: MessageCircle, label: t.comments, color: "text-muted-foreground", action: () => console.log("Comments") },
-    { icon: DollarSign, label: t.earnings, color: "text-muted-foreground", action: () => console.log("Earnings") },
-    { icon: FileStack, label: t.pages, color: "text-muted-foreground", action: () => console.log("Pages") },
-    { icon: Layout, label: t.layout, color: "text-muted-foreground", action: () => console.log("Layout") },
-    { icon: Palette, label: t.theme, color: "text-muted-foreground", action: () => console.log("Theme") },
-    { icon: Settings, label: t.settings, color: "text-muted-foreground", action: () => console.log("Settings") },
-    { icon: Bookmark, label: t.readingList, color: "text-muted-foreground", action: () => console.log("Reading List") },
-    { icon: ExternalLink, label: t.viewBlog, color: "text-primary", action: () => console.log("View blog") },
-  ];
+  const displayedPosts = showAllPosts ? posts : posts.slice(0, 3);
 
   return (
-    <div className="min-h-screen bg-gradient-sea relative">
-      {/* Mobile Sidebar Overlay */}
-      {sidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden" 
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full bg-gradient-sea">
+        <Sidebar className="w-60" collapsible="icon">
+          <SidebarTrigger className="m-2 self-end" />
+          <SidebarContent>
+            <SidebarGroup>
+              <SidebarGroupLabel className="text-card-foreground">
+                {language === "en" ? "Skyscape Dashboard" : "স্কাইস্কেপ ড্যাশবোর্ড"}
+              </SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {menuItems.map((item) => (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton asChild>
+                        <button
+                          onClick={() => navigate(item.url)}
+                          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left hover:bg-primary/10 transition-all duration-300"
+                        >
+                          <item.icon className="mr-2 h-4 w-4" />
+                          <span>{language === "en" ? item.englishTitle : item.banglaTitle}</span>
+                        </button>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </SidebarContent>
+        </Sidebar>
 
-      {/* Sidebar */}
-      <div className={`fixed left-0 top-0 h-full w-64 bg-card/95 backdrop-blur-sm border-r border-border/50 z-50 transform transition-transform duration-300 ease-in-out ${
-        sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-      } lg:translate-x-0`}>
-        <div className="p-6">
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-sm">RP</span>
-              </div>
-              <span className="text-card-foreground font-semibold">{t.brandName}</span>
-            </div>
-            <button 
-              onClick={() => setSidebarOpen(false)}
-              className="lg:hidden text-card-foreground hover:text-primary"
-            >
-              <X size={20} />
-            </button>
-          </div>
-
-
-          {/* Navigation Items */}
-          <nav className="space-y-2">
-            {navigationItems.map((item, index) => {
-              const Icon = item.icon;
-              return (
-                  <button
-                  key={index}
-                  onClick={item.action}
-                  className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left hover:bg-primary/10 transition-all duration-300 group border border-transparent hover:border-primary/20 hover:shadow-lg hover:shadow-primary/10"
-                >
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center group-hover:from-primary/30 group-hover:to-primary/20 transition-all duration-300">
-                    <Icon size={16} className={`${item.color} group-hover:text-primary transition-colors duration-300`} />
-                  </div>
-                  <span className="text-card-foreground group-hover:text-primary font-medium transition-colors duration-300">
-                    {item.label}
-                  </span>
-                </button>
-              );
-            })}
-          </nav>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-64'}`}>
         {/* Header */}
-        <header className="flex items-center justify-between p-6 bg-background/10 backdrop-blur-sm">
+        <header className="fixed top-0 right-0 left-0 z-30 flex items-center justify-between p-4 bg-background/10 backdrop-blur-sm border-b border-border/50">
           <div className="flex items-center gap-4">
-            <button 
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden text-foreground hover:text-primary"
-            >
-              <Menu size={24} />
-            </button>
-            <div className="flex items-center gap-2 lg:hidden">
-              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-sm">RP</span>
-              </div>
-              <span className="text-foreground font-semibold">{t.brandName}</span>
-            </div>
+            <SidebarTrigger />
+            <h1 className="text-xl font-bold text-foreground">
+              {language === "en" ? "Skyscape" : "স্কাইস্কেপ"}
+            </h1>
           </div>
-        <nav className="hidden md:flex items-center gap-6">
-          <a href="#" className="text-foreground hover:text-primary transition-colors">{t.home}</a>
-          <a href="#" className="text-foreground hover:text-primary transition-colors">{t.about}</a>
-          <a href="#" className="text-foreground hover:text-primary transition-colors">{t.contact}</a>
-        </nav>
-        <div className="flex items-center gap-4">
-          <button 
-            onClick={toggleDarkMode}
-            className="text-foreground hover:text-primary transition-colors p-2 rounded-lg hover:bg-primary/10"
-          >
-            {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
-          </button>
-          <button 
-            onClick={toggleLanguage}
-            className="text-foreground hover:text-primary transition-colors text-sm font-medium px-3 py-2 rounded-lg hover:bg-primary/10 border border-border/50"
-          >
-            {language}
-          </button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleTheme}
+              className="text-foreground hover:text-primary"
+            >
+              {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleLanguage}
+              className="text-foreground hover:text-primary font-medium"
+            >
+              <Languages size={16} className="mr-1" />
+              {language === "en" ? "EN" : "বাং"}
+            </Button>
           </div>
         </header>
 
-      {/* Hero Section with Wave Effect */}
-      <section className="relative min-h-[70vh] flex items-center justify-center text-center px-6">
-        {/* Subtle Spiritual Symbols Background */}
-        <div className="absolute inset-0 overflow-hidden opacity-10">
-          <div className="absolute top-20 left-10 text-6xl">☯</div>
-          <div className="absolute top-40 right-20 text-4xl">🧠</div>
-          <div className="absolute bottom-40 left-20 text-5xl">∞</div>
-          <div className="absolute bottom-20 right-10 text-4xl">🌀</div>
-          <div className="absolute top-60 left-1/3 text-3xl">△</div>
-          <div className="absolute bottom-60 right-1/3 text-3xl">◯</div>
-        </div>
+        {/* Main Content */}
+        <main className="flex-1 p-8 pt-20">
+          <div className="max-w-4xl mx-auto">
+            {/* Welcome Header */}
+            <div className="mb-8">
+              <h1 className="text-4xl font-bold text-foreground mb-4">
+                {language === "en" ? "Welcome to Skyscape" : "স্কাইস্কেপে স্বাগতম"}
+              </h1>
+              <p className="text-xl text-muted-foreground">
+                {language === "en" 
+                  ? "Your platform for sharing thoughts, insights, and inspiration" 
+                  : "আপনার চিন্তাভাবনা, অন্তর্দৃষ্টি এবং অনুপ্রেরণা ভাগ করার প্ল্যাটফর্ম"}
+              </p>
+              <p className="text-sm text-muted-foreground mt-2">
+                {language === "en" 
+                  ? "Visit your blog at: skyscape.lovable.app" 
+                  : "আপনার ব্লগ দেখুন: skyscape.lovable.app"}
+              </p>
+            </div>
 
-        {/* Wave Animation */}
-        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-wave opacity-60">
-          <svg className="absolute bottom-0 w-full h-full" viewBox="0 0 1200 120" preserveAspectRatio="none">
-            <path 
-              d="M0,60 Q300,120 600,60 T1200,60 L1200,120 L0,120 Z" 
-              fill="currentColor" 
-              className="text-background/20 animate-pulse"
-            />
-          </svg>
-        </div>
-
-        <div className="relative z-10 max-w-4xl">
-          <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-4 drop-shadow-lg">
-            {t.title}
-          </h1>
-          <p className="text-xl text-foreground/80 mb-8 max-w-2xl mx-auto">
-            {t.subtitle}
-          </p>
-          <div className="mt-8 p-4 bg-primary/10 rounded-lg border border-primary/20 max-w-md mx-auto mb-8">
-            <p className="text-primary font-medium text-lg">{t.blogAddress}</p>
-          </div>
-          <div className="flex items-center justify-center gap-4 mb-8">
-            <div className="w-6 h-6 rounded-full bg-primary/30 animate-pulse"></div>
-            <div className="w-4 h-4 rounded-full bg-primary/50 animate-pulse delay-100"></div>
-          </div>
-          <Button 
-            size="lg" 
-            className="bg-primary/90 hover:bg-primary text-primary-foreground shadow-wave transition-all duration-300 hover:shadow-spiritual"
-          >
-            {t.beginJourney}
-          </Button>
-        </div>
-      </section>
-
-      {/* Featured Reflections */}
-      <section className="py-16 px-6 bg-background/5 backdrop-blur-sm">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-center text-foreground mb-12">
-            {t.featuredReflections}
-          </h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {
-                title: "The Future of Web Development",
-                author: "John Doe",
-                date: "2024-01-15",
-                excerpt: "Exploring the latest trends and technologies shaping the web development landscape."
-              },
-              {
-                title: "Minimalist Living: A Guide to Simplicity",
-                author: "Jane Smith",
-                date: "2024-01-12",
-                excerpt: "Discover how minimalism can transform your life and bring more joy to everyday moments."
-              },
-              {
-                title: "Hidden Gems of Europe",
-                author: "Mike Johnson",
-                date: "2024-01-10",
-                excerpt: "Uncover the most beautiful and lesser-known destinations across European countries."
-              }
-            ].map((post, index) => (
-              <Card key={index} className="bg-card/80 backdrop-blur-sm border-border/50 hover:shadow-wave transition-all duration-300">
-                <div className="h-48 bg-gradient-wave rounded-t-lg relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-card/60"></div>
-                  <div className="absolute bottom-4 left-4 text-card-foreground">
-                    <div className="text-xs opacity-75">{post.author} • {post.date}</div>
-                  </div>
-                </div>
+            {/* Quick Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+              <Card className="bg-card/80 backdrop-blur-sm border-border/50">
                 <CardContent className="p-6">
-                  <h3 className="text-xl font-semibold text-card-foreground mb-3">
-                    {post.title}
-                  </h3>
-                  <p className="text-muted-foreground mb-4">
-                    {post.excerpt}
-                  </p>
-                  <Button variant="secondary" size="sm">
-                    {t.beginJourney.replace(' →', '')}
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Paths of Exploration */}
-      <section className="py-16 px-6">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-center text-foreground mb-12">
-            {t.pathsOfExploration}
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { 
-                title: t.spirituality, 
-                icon: "☯️", 
-                articles: language === "EN" ? "24 articles" : "২৪টি নিবন্ধ",
-                description: language === "EN" ? "Explore inner peace and connection through Advaita Vedanta" : "অদ্বৈত বেদান্তের মাধ্যমে অন্তর্শান্তি ও সংযোগ অন্বেষণ করুন"
-              },
-              { 
-                title: t.philosophy, 
-                icon: "🤔", 
-                articles: language === "EN" ? "18 articles" : "১৮টি নিবন্ধ",
-                description: language === "EN" ? "Question, think, and understand existence" : "প্রশ্ন করুন, চিন্তা করুন এবং অস্তিত্ব বুঝুন"
-              },
-              { 
-                title: t.psychology, 
-                icon: "🧠", 
-                articles: language === "EN" ? "32 articles" : "৩২টি নিবন্ধ",
-                description: language === "EN" ? "Understand the mind and behavior patterns" : "মন এবং আচরণের ধরন বুঝুন"
-              }
-            ].map((path, index) => (
-              <Card key={index} className="text-center bg-card/60 backdrop-blur-sm border-border/50 hover:shadow-spiritual transition-all duration-300 group">
-                <CardContent className="p-8">
-                  <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                    {path.icon}
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-primary/10 rounded-lg">
+                      <FileText className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold text-card-foreground">{posts.length}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {language === "en" ? "Total Posts" : "মোট পোস্ট"}
+                      </p>
+                    </div>
                   </div>
-                  <h3 className="text-xl font-semibold text-card-foreground mb-2">
-                    {path.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground mb-2">
-                    {path.articles}
-                  </p>
-                  <p className="text-muted-foreground">
-                    {path.description}
-                  </p>
                 </CardContent>
               </Card>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* Footer Wave */}
-      <footer className="relative bg-gradient-wave py-16 text-center">
-        <svg className="absolute top-0 w-full h-16" viewBox="0 0 1200 120" preserveAspectRatio="none">
-          <path 
-            d="M0,60 Q300,0 600,60 T1200,60 L1200,0 L0,0 Z" 
-            fill="currentColor" 
-            className="text-background/20"
-          />
-        </svg>
-        <div className="relative z-10 max-w-4xl mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-8 text-sm">
-            <div>
-              <h4 className="font-semibold text-foreground mb-4">Blog</h4>
-              <p className="text-foreground/70">Sharing stories and insights that matter</p>
+              <Card className="bg-card/80 backdrop-blur-sm border-border/50">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-green-500/10 rounded-lg">
+                      <Eye className="h-6 w-6 text-green-500" />
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold text-card-foreground">8.2K</p>
+                      <p className="text-sm text-muted-foreground">
+                        {language === "en" ? "Total Views" : "মোট দর্শক"}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-card/80 backdrop-blur-sm border-border/50">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-blue-500/10 rounded-lg">
+                      <MessageSquare className="h-6 w-6 text-blue-500" />
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold text-card-foreground">147</p>
+                      <p className="text-sm text-muted-foreground">
+                        {language === "en" ? "Comments" : "মন্তব্য"}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-card/80 backdrop-blur-sm border-border/50">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-yellow-500/10 rounded-lg">
+                      <Star className="h-6 w-6 text-yellow-500" />
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold text-card-foreground">4.8</p>
+                      <p className="text-sm text-muted-foreground">
+                        {language === "en" ? "Avg Rating" : "গড় রেটিং"}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
-            <div>
-              <h4 className="font-semibold text-foreground mb-4">Navigation</h4>
-              <div className="space-y-2 text-foreground/70">
-                <div>Home</div>
-                <div>About</div>
-                <div>Contact</div>
-              </div>
-            </div>
-            <div>
-              <h4 className="font-semibold text-foreground mb-4">Categories</h4>
-              <div className="space-y-2 text-foreground/70">
-                <div>Technology</div>
-                <div>Lifestyle</div>
-                <div>Travel</div>
-              </div>
-            </div>
-            <div>
-              <h4 className="font-semibold text-foreground mb-4">Follow Us</h4>
-              <div className="flex justify-center gap-4 text-xl">
-                <span className="text-foreground/70 hover:text-foreground cursor-pointer">📘</span>
-                <span className="text-foreground/70 hover:text-foreground cursor-pointer">🐦</span>
-                <span className="text-foreground/70 hover:text-foreground cursor-pointer">📸</span>
-                <span className="text-foreground/70 hover:text-foreground cursor-pointer">💼</span>
-              </div>
-            </div>
+
+            {/* Recent Posts */}
+            <Card className="bg-card/80 backdrop-blur-sm border-border/50">
+              <CardHeader>
+                <CardTitle className="text-card-foreground flex items-center justify-between">
+                  <span>{language === "en" ? "Recent Blog Posts" : "সাম্প্রতিক ব্লগ পোস্ট"}</span>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => navigate("/new-post")}
+                    className="border-border/50 bg-card/80 backdrop-blur-sm hover:bg-card"
+                  >
+                    <PenTool size={16} className="mr-2" />
+                    {language === "en" ? "New Post" : "নতুন পোস্ট"}
+                  </Button>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {posts.length === 0 ? (
+                  <div className="text-center py-12">
+                    <FileText size={48} className="mx-auto mb-4 text-muted-foreground" />
+                    <h3 className="text-lg font-medium text-card-foreground mb-2">
+                      {language === "en" ? "No posts yet" : "এখনো কোন পোস্ট নেই"}
+                    </h3>
+                    <p className="text-muted-foreground mb-4">
+                      {language === "en" 
+                        ? "Start by creating your first blog post" 
+                        : "আপনার প্রথম ব্লগ পোস্ট তৈরি করে শুরু করুন"}
+                    </p>
+                    <Button onClick={() => navigate("/new-post")}>
+                      {language === "en" ? "Create First Post" : "প্রথম পোস্ট তৈরি করুন"}
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    {displayedPosts.map((post) => (
+                      <div 
+                        key={post.id} 
+                        className="p-6 rounded-lg bg-background/30 hover:bg-background/50 transition-colors cursor-pointer"
+                        onClick={() => navigate(`/blog/${post.id}`)}
+                      >
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex-1">
+                            <h3 className="text-xl font-bold text-card-foreground mb-2 hover:text-primary transition-colors">
+                              {post.title}
+                            </h3>
+                            <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
+                              <div className="flex items-center gap-1">
+                                <Calendar size={14} />
+                                {new Date(post.createdAt).toLocaleDateString()}
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <User size={14} />
+                                Admin
+                              </div>
+                              <Badge className="bg-primary/10 text-primary capitalize">
+                                {post.category}
+                              </Badge>
+                            </div>
+                            <p className="text-muted-foreground mb-4 leading-relaxed">
+                              {getExcerpt(post.content)}
+                            </p>
+                            <div className="flex items-center justify-between">
+                              <div className="flex gap-2 flex-wrap">
+                                {post.tags.slice(0, 3).map((tag, index) => (
+                                  <Badge key={index} variant="secondary" className="text-xs">
+                                    {tag}
+                                  </Badge>
+                                ))}
+                                {post.tags.length > 3 && (
+                                  <Badge variant="secondary" className="text-xs">
+                                    +{post.tags.length - 3} more
+                                  </Badge>
+                                )}
+                              </div>
+                              <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80">
+                                {language === "en" ? "Read More" : "আরও পড়ুন"}
+                                <ArrowRight size={14} className="ml-1" />
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    
+                    {posts.length > 3 && (
+                      <div className="text-center pt-4">
+                        <Button 
+                          variant="outline"
+                          onClick={() => setShowAllPosts(!showAllPosts)}
+                          className="border-border/50 bg-card/80 backdrop-blur-sm hover:bg-card"
+                        >
+                          {showAllPosts 
+                            ? (language === "en" ? "Show Less" : "কম দেখান")
+                            : (language === "en" ? `View All ${posts.length} Posts` : `সব ${posts.length}টি পোস্ট দেখুন`)
+                          }
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </div>
-          <div className="mt-12 pt-8 border-t border-foreground/20 text-foreground/60">
-            © 2024 Blog. All rights reserved.
-          </div>
-          </div>
-        </footer>
+        </main>
       </div>
-    </div>
+    </SidebarProvider>
   );
 };
 
