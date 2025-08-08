@@ -6,6 +6,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NewPost from "./pages/NewPost";
 import NotFound from "./pages/NotFound";
+import Stats from "./pages/Stats";
+import Comments from "./pages/Comments";
+import Earnings from "./pages/Earnings";
 
 const queryClient = new QueryClient();
 
@@ -18,6 +21,9 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/new-post" element={<NewPost />} />
+          <Route path="/stats" element={<Stats />} />
+          <Route path="/comments" element={<Comments />} />
+          <Route path="/earnings" element={<Earnings />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

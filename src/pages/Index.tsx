@@ -115,9 +115,9 @@ const Index = () => {
   const navigationItems = [
     { icon: Plus, label: t.newPost, color: "text-primary", action: () => navigate("/new-post") },
     { icon: FileText, label: t.posts, color: "text-muted-foreground", action: () => console.log("Posts") },
-    { icon: BarChart3, label: t.stats, color: "text-primary", action: () => console.log("Stats") },
-    { icon: MessageCircle, label: t.comments, color: "text-muted-foreground", action: () => console.log("Comments") },
-    { icon: DollarSign, label: t.earnings, color: "text-muted-foreground", action: () => console.log("Earnings") },
+    { icon: BarChart3, label: t.stats, color: "text-primary", action: () => navigate("/stats") },
+    { icon: MessageCircle, label: t.comments, color: "text-muted-foreground", action: () => navigate("/comments") },
+    { icon: DollarSign, label: t.earnings, color: "text-muted-foreground", action: () => navigate("/earnings") },
     { icon: FileStack, label: t.pages, color: "text-muted-foreground", action: () => console.log("Pages") },
     { icon: Layout, label: t.layout, color: "text-muted-foreground", action: () => console.log("Layout") },
     { icon: Palette, label: t.theme, color: "text-muted-foreground", action: () => console.log("Theme") },
