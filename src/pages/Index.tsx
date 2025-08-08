@@ -272,26 +272,7 @@ const Index = () => {
             {t.featuredReflections}
           </h2>
           <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {
-                title: "The Future of Web Development",
-                author: "John Doe",
-                date: "2024-01-15",
-                excerpt: "Exploring the latest trends and technologies shaping the web development landscape."
-              },
-              {
-                title: "Minimalist Living: A Guide to Simplicity",
-                author: "Jane Smith",
-                date: "2024-01-12",
-                excerpt: "Discover how minimalism can transform your life and bring more joy to everyday moments."
-              },
-              {
-                title: "Hidden Gems of Europe",
-                author: "Mike Johnson",
-                date: "2024-01-10",
-                excerpt: "Uncover the most beautiful and lesser-known destinations across European countries."
-              }
-            ].map((post, index) => (
+            {[].map((post, index) => (
               <Card key={index} className="bg-card/80 backdrop-blur-sm border-border/50 hover:shadow-wave transition-all duration-300">
                 <div className="h-48 bg-gradient-wave rounded-t-lg relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-b from-transparent to-card/60"></div>
