@@ -15,7 +15,10 @@ import {
   Menu,
   X,
   Sun,
-  Moon 
+  Moon,
+  Edit3,
+  Clock,
+  Trash2
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -24,6 +27,8 @@ const Index = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [language, setLanguage] = useState("EN");
+  const [activeSection, setActiveSection] = useState('home');
+  const [drafts, setDrafts] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,6 +41,11 @@ const Index = () => {
     if (savedLanguage) {
       setLanguage(savedLanguage);
     }
+    
+    // Load drafts
+    const savedPosts = JSON.parse(localStorage.getItem('blog-posts') || '[]');
+    const draftPosts = savedPosts.filter((post: any) => post.status === 'draft');
+    setDrafts(draftPosts);
   }, []);
 
   const toggleDarkMode = () => {
@@ -53,6 +63,22 @@ const Index = () => {
     const newLanguage = language === "EN" ? "বাং" : "EN";
     setLanguage(newLanguage);
     localStorage.setItem('language', newLanguage);
+  };
+
+  const handleDeleteDraft = (draftId: number) => {
+    const savedPosts = JSON.parse(localStorage.getItem('blog-posts') || '[]');
+    const updatedPosts = savedPosts.filter((post: any) => post.id !== draftId);
+    localStorage.setItem('blog-posts', JSON.stringify(updatedPosts));
+    
+    // Update drafts state
+    const updatedDrafts = drafts.filter((draft: any) => draft.id !== draftId);
+    setDrafts(updatedDrafts);
+  };
+
+  const handleEditDraft = (draft: any) => {
+    // Store draft data for editing
+    localStorage.setItem('draft-edit', JSON.stringify(draft));
+    navigate('/new-post');
   };
 
   const translations = {
@@ -80,7 +106,13 @@ const Index = () => {
       psychology: "Psychology",
       beginJourney: "Begin Your Journey →",
       blogAddress: "Your blog address: skyscape.lovable.app",
-      brandName: "Skyscape"
+      brandName: "Skyscape",
+      drafts: "Drafts",
+      noDrafts: "No draft posts yet",
+      editDraft: "Edit Draft",
+      deleteDraft: "Delete Draft",
+      continueDraft: "Continue Writing",
+      saved: "Saved"
     },
     বাং: {
       title: "আকাশের দৃশ্যপট",
@@ -106,7 +138,13 @@ const Index = () => {
       psychology: "মনোবিজ্ঞান",
       beginJourney: "আপনার যাত্রা শুরু করুন →",
       blogAddress: "আপনার ব্লগ ঠিকানা: skyscape.lovable.app",
-      brandName: "আকাশের দৃশ্যপট"
+      brandName: "আকাশের দৃশ্যপট",
+      drafts: "খসড়া",
+      noDrafts: "কোন খসড়া পোস্ট নেই",
+      editDraft: "খসড়া সম্পাদনা",
+      deleteDraft: "খসড়া মুছুন",
+      continueDraft: "লেখা চালিয়ে যান",
+      saved: "সংরক্ষিত"
     }
   };
 
@@ -115,6 +153,7 @@ const Index = () => {
   const navigationItems = [
     { icon: Plus, label: t.newPost, color: "text-primary", action: () => navigate("/new-post") },
     { icon: FileText, label: t.posts, color: "text-muted-foreground", action: () => console.log("Posts") },
+    { icon: Edit3, label: t.drafts, color: "text-primary", action: () => setActiveSection('drafts') },
     { icon: BarChart3, label: t.stats, color: "text-primary", action: () => navigate("/stats") },
     { icon: MessageCircle, label: t.comments, color: "text-muted-foreground", action: () => navigate("/comments") },
     { icon: DollarSign, label: t.earnings, color: "text-muted-foreground", action: () => navigate("/earnings") },
@@ -198,152 +237,247 @@ const Index = () => {
               <span className="text-foreground font-semibold">{t.brandName}</span>
             </div>
           </div>
-        <nav className="hidden md:flex items-center gap-6">
-          <a href="#" className="text-foreground hover:text-primary transition-colors">{t.home}</a>
-          <a href="#" className="text-foreground hover:text-primary transition-colors">{t.about}</a>
-          <a href="#" className="text-foreground hover:text-primary transition-colors">{t.contact}</a>
-        </nav>
-        <div className="flex items-center gap-4">
-          <button 
-            onClick={toggleDarkMode}
-            className="text-foreground hover:text-primary transition-colors p-2 rounded-lg hover:bg-primary/10"
-          >
-            {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
-          </button>
-          <button 
-            onClick={toggleLanguage}
-            className="text-foreground hover:text-primary transition-colors text-sm font-medium px-3 py-2 rounded-lg hover:bg-primary/10 border border-border/50"
-          >
-            {language}
-          </button>
+          <nav className="hidden md:flex items-center gap-6">
+            <button 
+              onClick={() => setActiveSection('home')}
+              className={`transition-colors ${activeSection === 'home' ? 'text-primary' : 'text-foreground hover:text-primary'}`}
+            >
+              {t.home}
+            </button>
+            <a href="#" className="text-foreground hover:text-primary transition-colors">{t.about}</a>
+            <a href="#" className="text-foreground hover:text-primary transition-colors">{t.contact}</a>
+          </nav>
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={toggleDarkMode}
+              className="text-foreground hover:text-primary transition-colors p-2 rounded-lg hover:bg-primary/10"
+            >
+              {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+            <button 
+              onClick={toggleLanguage}
+              className="text-foreground hover:text-primary transition-colors text-sm font-medium px-3 py-2 rounded-lg hover:bg-primary/10 border border-border/50"
+            >
+              {language}
+            </button>
           </div>
         </header>
 
-      {/* Hero Section with Wave Effect */}
-      <section className="relative min-h-[70vh] flex items-center justify-center text-center px-6">
-        {/* Subtle Spiritual Symbols Background */}
-        <div className="absolute inset-0 overflow-hidden opacity-10">
-          <div className="absolute top-20 left-10 text-6xl">☯</div>
-          <div className="absolute top-40 right-20 text-4xl">🧠</div>
-          <div className="absolute bottom-40 left-20 text-5xl">∞</div>
-          <div className="absolute bottom-20 right-10 text-4xl">🌀</div>
-          <div className="absolute top-60 left-1/3 text-3xl">△</div>
-          <div className="absolute bottom-60 right-1/3 text-3xl">◯</div>
-        </div>
+        {activeSection === 'home' && (
+          <>
+            {/* Hero Section with Wave Effect */}
+            <section className="relative min-h-[70vh] flex items-center justify-center text-center px-6">
+              {/* Subtle Spiritual Symbols Background */}
+              <div className="absolute inset-0 overflow-hidden opacity-10">
+                <div className="absolute top-20 left-10 text-6xl">☯</div>
+                <div className="absolute top-40 right-20 text-4xl">🧠</div>
+                <div className="absolute bottom-40 left-20 text-5xl">∞</div>
+                <div className="absolute bottom-20 right-10 text-4xl">🌀</div>
+                <div className="absolute top-60 left-1/3 text-3xl">△</div>
+                <div className="absolute bottom-60 right-1/3 text-3xl">◯</div>
+              </div>
 
-        {/* Wave Animation */}
-        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-wave opacity-60">
-          <svg className="absolute bottom-0 w-full h-full" viewBox="0 0 1200 120" preserveAspectRatio="none">
-            <path 
-              d="M0,60 Q300,120 600,60 T1200,60 L1200,120 L0,120 Z" 
-              fill="currentColor" 
-              className="text-background/20 animate-pulse"
-            />
-          </svg>
-        </div>
+              {/* Wave Animation */}
+              <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-wave opacity-60">
+                <svg className="absolute bottom-0 w-full h-full" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                  <path 
+                    d="M0,60 Q300,120 600,60 T1200,60 L1200,120 L0,120 Z" 
+                    fill="currentColor" 
+                    className="text-background/20 animate-pulse"
+                  />
+                </svg>
+              </div>
 
-        <div className="relative z-10 max-w-4xl">
-          <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-4 drop-shadow-lg">
-            {t.title}
-          </h1>
-          <p className="text-xl text-foreground/80 mb-8 max-w-2xl mx-auto">
-            {t.subtitle}
-          </p>
-          <div className="mt-8 p-4 bg-primary/10 rounded-lg border border-primary/20 max-w-md mx-auto mb-8">
-            <p className="text-primary font-medium text-lg">{t.blogAddress}</p>
-          </div>
-          <div className="flex items-center justify-center gap-4 mb-8">
-            <div className="w-6 h-6 rounded-full bg-primary/30 animate-pulse"></div>
-            <div className="w-4 h-4 rounded-full bg-primary/50 animate-pulse delay-100"></div>
-          </div>
-          <Button 
-            size="lg" 
-            className="bg-primary/90 hover:bg-primary text-primary-foreground shadow-wave transition-all duration-300 hover:shadow-spiritual"
-          >
-            {t.beginJourney}
-          </Button>
-        </div>
-      </section>
-
-      {/* Featured Reflections */}
-      <section className="py-16 px-6 bg-background/5 backdrop-blur-sm">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-center text-foreground mb-12">
-            {t.featuredReflections}
-          </h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {[].map((post, index) => (
-              <Card key={index} className="bg-card/80 backdrop-blur-sm border-border/50 hover:shadow-wave transition-all duration-300">
-                <div className="h-48 bg-gradient-wave rounded-t-lg relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-card/60"></div>
-                  <div className="absolute bottom-4 left-4 text-card-foreground">
-                    <div className="text-xs opacity-75">{post.author} • {post.date}</div>
-                  </div>
+              <div className="relative z-10 max-w-4xl">
+                <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-4 drop-shadow-lg">
+                  {t.title}
+                </h1>
+                <p className="text-xl text-foreground/80 mb-8 max-w-2xl mx-auto">
+                  {t.subtitle}
+                </p>
+                <div className="mt-8 p-4 bg-primary/10 rounded-lg border border-primary/20 max-w-md mx-auto mb-8">
+                  <p className="text-primary font-medium text-lg">{t.blogAddress}</p>
                 </div>
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-semibold text-card-foreground mb-3">
-                    {post.title}
-                  </h3>
-                  <p className="text-muted-foreground mb-4">
-                    {post.excerpt}
-                  </p>
-                  <Button variant="secondary" size="sm">
-                    {t.beginJourney.replace(' →', '')}
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+                <div className="flex items-center justify-center gap-4 mb-8">
+                  <div className="w-6 h-6 rounded-full bg-primary/30 animate-pulse"></div>
+                  <div className="w-4 h-4 rounded-full bg-primary/50 animate-pulse delay-100"></div>
+                </div>
+                <Button 
+                  size="lg" 
+                  className="bg-primary/90 hover:bg-primary text-primary-foreground shadow-wave transition-all duration-300 hover:shadow-spiritual"
+                >
+                  {t.beginJourney}
+                </Button>
+              </div>
+            </section>
+          </>
+        )}
 
-      {/* Paths of Exploration */}
-      <section className="py-16 px-6">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-center text-foreground mb-12">
-            {t.pathsOfExploration}
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { 
-                title: t.spirituality, 
-                icon: "☯️", 
-                articles: language === "EN" ? "24 articles" : "২৪টি নিবন্ধ",
-                description: language === "EN" ? "Explore inner peace and connection through Advaita Vedanta" : "অদ্বৈত বেদান্তের মাধ্যমে অন্তর্শান্তি ও সংযোগ অন্বেষণ করুন"
-              },
-              { 
-                title: t.philosophy, 
-                icon: "🤔", 
-                articles: language === "EN" ? "18 articles" : "১৮টি নিবন্ধ",
-                description: language === "EN" ? "Question, think, and understand existence" : "প্রশ্ন করুন, চিন্তা করুন এবং অস্তিত্ব বুঝুন"
-              },
-              { 
-                title: t.psychology, 
-                icon: "🧠", 
-                articles: language === "EN" ? "32 articles" : "৩২টি নিবন্ধ",
-                description: language === "EN" ? "Understand the mind and behavior patterns" : "মন এবং আচরণের ধরন বুঝুন"
-              }
-            ].map((path, index) => (
-              <Card key={index} className="text-center bg-card/60 backdrop-blur-sm border-border/50 hover:shadow-spiritual transition-all duration-300 group">
-                <CardContent className="p-8">
-                  <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                    {path.icon}
-                  </div>
-                  <h3 className="text-xl font-semibold text-card-foreground mb-2">
-                    {path.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground mb-2">
-                    {path.articles}
-                  </p>
-                  <p className="text-muted-foreground">
-                    {path.description}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+        {activeSection === 'drafts' && (
+          <section className="py-16 px-6 min-h-screen">
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center space-y-4 py-8 mb-12">
+                <h1 className="text-4xl font-bold bg-gradient-wave bg-clip-text text-transparent">
+                  {t.drafts}
+                </h1>
+                <p className="text-muted-foreground max-w-2xl mx-auto">
+                  {language === "EN" ? "Manage your saved draft posts" : "আপনার সংরক্ষিত খসড়া পোস্টগুলি পরিচালনা করুন"}
+                </p>
+              </div>
+
+              {drafts.length > 0 ? (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {drafts.map((draft: any) => (
+                    <Card key={draft.id} className="bg-card/80 backdrop-blur-sm border-border/50 hover:shadow-wave transition-all duration-300">
+                      <CardContent className="p-6">
+                        <div className="flex items-start justify-between mb-3">
+                          <h3 className="text-xl font-semibold text-card-foreground">{draft.title}</h3>
+                          <span className="px-2 py-1 bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 rounded-md text-xs font-medium">
+                            DRAFT
+                          </span>
+                        </div>
+                        <p className="text-muted-foreground mb-4 line-clamp-3">
+                          {draft.content.length > 120 
+                            ? draft.content.substring(0, 120) + "..." 
+                            : draft.content
+                          }
+                        </p>
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          {draft.tags && draft.tags.map((tag: string, tagIndex: number) => (
+                            <span key={tagIndex} className="px-2 py-1 bg-primary/10 text-primary rounded-md text-sm">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                        <div className="flex items-center gap-2 mb-4">
+                          <Clock className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-sm text-muted-foreground">
+                            {t.saved}: {new Date(draft.createdAt).toLocaleDateString()}
+                          </span>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button 
+                            variant="default" 
+                            size="sm" 
+                            onClick={() => handleEditDraft(draft)}
+                            className="flex-1"
+                          >
+                            <Edit3 className="h-4 w-4 mr-1" />
+                            {t.continueDraft}
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            onClick={() => handleDeleteDraft(draft.id)}
+                            className="text-destructive hover:text-destructive"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <FileText className="h-16 w-16 text-muted-foreground/50 mx-auto mb-4" />
+                  <p className="text-muted-foreground text-lg">{t.noDrafts}</p>
+                  <Button 
+                    onClick={() => navigate('/new-post')}
+                    className="mt-4"
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    {t.newPost}
+                  </Button>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
+        {activeSection === 'home' && (
+          <>
+            {/* Featured Reflections */}
+            <section className="py-16 px-6 bg-background/5 backdrop-blur-sm">
+              <div className="max-w-6xl mx-auto">
+                <h2 className="text-3xl font-bold text-center text-foreground mb-12">
+                  {t.featuredReflections}
+                </h2>
+                <div className="grid md:grid-cols-3 gap-6">
+                  {[].map((post, index) => (
+                    <Card key={index} className="bg-card/80 backdrop-blur-sm border-border/50 hover:shadow-wave transition-all duration-300">
+                      <div className="h-48 bg-gradient-wave rounded-t-lg relative overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-card/60"></div>
+                        <div className="absolute bottom-4 left-4 text-card-foreground">
+                          <div className="text-xs opacity-75">{post.author} • {post.date}</div>
+                        </div>
+                      </div>
+                      <CardContent className="p-6">
+                        <h3 className="text-xl font-semibold text-card-foreground mb-3">
+                          {post.title}
+                        </h3>
+                        <p className="text-muted-foreground mb-4">
+                          {post.excerpt}
+                        </p>
+                        <Button variant="secondary" size="sm">
+                          {t.beginJourney.replace(' →', '')}
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            {/* Paths of Exploration */}
+            <section className="py-16 px-6">
+              <div className="max-w-4xl mx-auto">
+                <h2 className="text-3xl font-bold text-center text-foreground mb-12">
+                  {t.pathsOfExploration}
+                </h2>
+                <div className="grid md:grid-cols-3 gap-8">
+                  {[
+                    { 
+                      title: t.spirituality, 
+                      icon: "☯️", 
+                      articles: language === "EN" ? "24 articles" : "২৪টি নিবন্ধ",
+                      description: language === "EN" ? "Explore inner peace and connection through Advaita Vedanta" : "অদ্বৈত বেদান্তের মাধ্যমে অন্তর্শান্তি ও সংযোগ অন্বেষণ করুন"
+                    },
+                    { 
+                      title: t.philosophy, 
+                      icon: "🤔", 
+                      articles: language === "EN" ? "18 articles" : "১৮টি নিবন্ধ",
+                      description: language === "EN" ? "Question, think, and understand existence" : "প্রশ্ন করুন, চিন্তা করুন এবং অস্তিত্ব বুঝুন"
+                    },
+                    { 
+                      title: t.psychology, 
+                      icon: "🧠", 
+                      articles: language === "EN" ? "32 articles" : "৩২টি নিবন্ধ",
+                      description: language === "EN" ? "Understand the mind and behavior patterns" : "মন এবং আচরণের ধরন বুঝুন"
+                    }
+                  ].map((path, index) => (
+                    <Card key={index} className="text-center bg-card/60 backdrop-blur-sm border-border/50 hover:shadow-spiritual transition-all duration-300 group">
+                      <CardContent className="p-8">
+                        <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                          {path.icon}
+                        </div>
+                        <h3 className="text-xl font-semibold text-card-foreground mb-2">
+                          {path.title}
+                        </h3>
+                        <p className="text-sm text-muted-foreground mb-2">
+                          {path.articles}
+                        </p>
+                        <p className="text-muted-foreground">
+                          {path.description}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            </section>
+          </>
+        )}
 
       {/* Footer Wave */}
       <footer className="relative bg-gradient-wave py-16 text-center">

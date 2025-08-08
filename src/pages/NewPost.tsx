@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -31,7 +31,25 @@ const NewPost = () => {
   const [category, setCategory] = useState("spirituality");
   const [status, setStatus] = useState("draft");
   const [showPreview, setShowPreview] = useState(false);
+  const [editingDraftId, setEditingDraftId] = useState<number | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Load draft for editing if coming from drafts page
+  useEffect(() => {
+    const draftData = localStorage.getItem('draft-edit');
+    if (draftData) {
+      const draft = JSON.parse(draftData);
+      setTitle(draft.title);
+      setContent(draft.content);
+      setTags(draft.tags.join(', '));
+      setCategory(draft.category);
+      setStatus(draft.status);
+      setEditingDraftId(draft.id);
+      
+      // Clear the temporary edit data
+      localStorage.removeItem('draft-edit');
+    }
+  }, []);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
@@ -113,8 +131,24 @@ const NewPost = () => {
     
     // Save to localStorage for demo purposes
     const existingPosts = JSON.parse(localStorage.getItem('blog-posts') || '[]');
-    const newPost = { ...postData, id: Date.now() };
-    existingPosts.push(newPost);
+    
+    let finalPost;
+    if (editingDraftId) {
+      // Update existing draft
+      const postIndex = existingPosts.findIndex((post: any) => post.id === editingDraftId);
+      if (postIndex !== -1) {
+        finalPost = { ...existingPosts[postIndex], ...postData };
+        existingPosts[postIndex] = finalPost;
+      } else {
+        finalPost = { ...postData, id: Date.now() };
+        existingPosts.push(finalPost);
+      }
+    } else {
+      // Create new post
+      finalPost = { ...postData, id: Date.now() };
+      existingPosts.push(finalPost);
+    }
+    
     localStorage.setItem('blog-posts', JSON.stringify(existingPosts));
     
     toast({
