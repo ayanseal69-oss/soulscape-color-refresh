@@ -226,7 +226,10 @@ const NewPost = () => {
             </Button>
             <Button 
               variant="outline"
-              onClick={handleSave} 
+              onClick={() => {
+                setStatus("draft");
+                setTimeout(() => handleSave(), 100);
+              }} 
               className="border-border/50 bg-card/80 backdrop-blur-sm hover:bg-card"
             >
               <Save size={16} className="mr-2" />
