@@ -18,7 +18,10 @@ import {
   Moon,
   Edit3,
   Clock,
-  Trash2
+  Trash2,
+  Home,
+  PenTool,
+  FileEdit
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
