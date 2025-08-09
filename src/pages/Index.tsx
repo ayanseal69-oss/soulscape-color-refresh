@@ -43,10 +43,22 @@ const Index = () => {
     }
     
     // Load drafts
+    loadDrafts();
+  }, []);
+
+  // Function to load drafts from localStorage
+  const loadDrafts = () => {
     const savedPosts = JSON.parse(localStorage.getItem('blog-posts') || '[]');
     const draftPosts = savedPosts.filter((post: any) => post.status === 'draft');
     setDrafts(draftPosts);
-  }, []);
+  };
+
+  // Refresh drafts when activeSection changes to 'drafts'
+  useEffect(() => {
+    if (activeSection === 'drafts') {
+      loadDrafts();
+    }
+  }, [activeSection]);
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
@@ -328,7 +340,11 @@ const Index = () => {
               {drafts.length > 0 ? (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {drafts.map((draft: any) => (
-                    <Card key={draft.id} className="bg-card/80 backdrop-blur-sm border-border/50 hover:shadow-wave transition-all duration-300">
+                    <Card 
+                      key={draft.id} 
+                      className="bg-card/80 backdrop-blur-sm border-border/50 hover:shadow-wave transition-all duration-300 cursor-pointer hover:border-primary/30"
+                      onClick={() => handleEditDraft(draft)}
+                    >
                       <CardContent className="p-6">
                         <div className="flex items-start justify-between mb-3">
                           <h3 className="text-xl font-semibold text-card-foreground">{draft.title}</h3>
@@ -359,7 +375,10 @@ const Index = () => {
                           <Button 
                             variant="default" 
                             size="sm" 
-                            onClick={() => handleEditDraft(draft)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEditDraft(draft);
+                            }}
                             className="flex-1"
                           >
                             <Edit3 className="h-4 w-4 mr-1" />
@@ -368,7 +387,10 @@ const Index = () => {
                           <Button 
                             variant="outline" 
                             size="sm" 
-                            onClick={() => handleDeleteDraft(draft.id)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteDraft(draft.id);
+                            }}
                             className="text-destructive hover:text-destructive"
                           >
                             <Trash2 className="h-4 w-4" />
