@@ -98,7 +98,7 @@ const NewPost = () => {
     setImagePreviewUrls(newPreviewUrls);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!title.trim()) {
       toast({
         title: "Error",
@@ -117,11 +117,22 @@ const NewPost = () => {
       return;
     }
 
+    // Convert images to base64 for storage
+    const imageDataUrls: string[] = [];
+    for (const image of selectedImages) {
+      const dataUrl = await new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target?.result as string);
+        reader.readAsDataURL(image);
+      });
+      imageDataUrls.push(dataUrl);
+    }
+
     const postData = {
       title,
       content,
       tags: tags.split(',').map(tag => tag.trim()),
-      images: selectedImages,
+      images: imageDataUrls,
       category,
       status,
       createdAt: new Date().toISOString()
