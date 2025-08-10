@@ -378,20 +378,20 @@ const NewPost = () => {
     <div className="min-h-screen bg-gradient-sea">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col gap-4 mb-8 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
             <Button
               variant="outline"
               size="sm"
               onClick={() => navigate("/")}
-              className="border-border/50 bg-card/80 backdrop-blur-sm hover:bg-card"
+              className="border-border/50 bg-card/80 backdrop-blur-sm hover:bg-card w-fit"
             >
               <ArrowLeft size={16} className="mr-2" />
               Back to Dashboard
             </Button>
-            <h1 className="text-2xl font-bold text-foreground">Create New Post - Skyscape</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-foreground">Create New Post - Skyscape</h1>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row">
             <Button
               variant="outline"
               onClick={handlePreview}
@@ -437,22 +437,22 @@ const NewPost = () => {
                 </div>
 
                 {/* Formatting Toolbar */}
-                <div className="flex gap-2 p-2 border border-border/50 rounded-lg bg-background/30">
-                  <Button variant="ghost" size="sm" onClick={handleBold} title="Bold">
-                    <Bold size={16} />
+                <div className="flex flex-wrap gap-1 sm:gap-2 p-2 border border-border/50 rounded-lg bg-background/30">
+                  <Button variant="ghost" size="sm" onClick={handleBold} title="Bold" className="min-w-0 px-2">
+                    <Bold size={14} className="sm:w-4 sm:h-4" />
                   </Button>
-                  <Button variant="ghost" size="sm" onClick={handleItalic} title="Italic">
-                    <Italic size={16} />
+                  <Button variant="ghost" size="sm" onClick={handleItalic} title="Italic" className="min-w-0 px-2">
+                    <Italic size={14} className="sm:w-4 sm:h-4" />
                   </Button>
-                  <Button variant="ghost" size="sm" onClick={handleLink} title="Insert Link">
-                    <Link size={16} />
+                  <Button variant="ghost" size="sm" onClick={handleLink} title="Insert Link" className="min-w-0 px-2">
+                    <Link size={14} className="sm:w-4 sm:h-4" />
                   </Button>
-                  <Button variant="ghost" size="sm" onClick={handleBulletList} title="Bullet List">
-                    <List size={16} />
+                  <Button variant="ghost" size="sm" onClick={handleBulletList} title="Bullet List" className="min-w-0 px-2">
+                    <List size={14} className="sm:w-4 sm:h-4" />
                   </Button>
                   <div className="ml-auto">
-                    <Button variant="ghost" size="sm" onClick={() => document.getElementById('image-upload')?.click()} title="Insert Image">
-                      <Image size={16} />
+                    <Button variant="ghost" size="sm" onClick={() => document.getElementById('image-upload')?.click()} title="Insert Image" className="min-w-0 px-2">
+                      <Image size={14} className="sm:w-4 sm:h-4" />
                     </Button>
                     <input
                       id="image-upload"
@@ -551,9 +551,9 @@ const NewPost = () => {
 
         {/* Preview Dialog */}
         <Dialog open={showPreview} onOpenChange={setShowPreview}>
-          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogContent className="max-w-[95vw] sm:max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle className="text-2xl font-bold">{title}</DialogTitle>
+              <DialogTitle className="text-lg sm:text-2xl font-bold">{title}</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <div className="flex gap-2 flex-wrap">
@@ -563,7 +563,7 @@ const NewPost = () => {
                   </span>
                 ))}
               </div>
-              <div className="prose prose-lg max-w-none">
+              <div className="prose prose-sm sm:prose-lg max-w-none">
                 {renderPreviewContent()}
               </div>
             </div>
