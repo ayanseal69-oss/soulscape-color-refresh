@@ -100,16 +100,20 @@ const NewPost = () => {
     const newContent = content.substring(0, start) + formattedText + content.substring(end);
     setContent(newContent);
     
-    // Set cursor position
-    setTimeout(() => {
+    // Focus first, then set cursor position
+    textarea.focus();
+    
+    // Use requestAnimationFrame for better timing
+    requestAnimationFrame(() => {
       if (selectedText) {
-        textarea.selectionStart = start + prefix.length;
-        textarea.selectionEnd = start + prefix.length + textToWrap.length;
+        // If text was selected, select the wrapped content
+        textarea.setSelectionRange(start + prefix.length, start + prefix.length + selectedText.length);
       } else {
-        textarea.selectionStart = textarea.selectionEnd = start + prefix.length + textToWrap.length;
+        // If no text was selected, place cursor after the placeholder text
+        const cursorPos = start + prefix.length + placeholder.length;
+        textarea.setSelectionRange(cursorPos, cursorPos);
       }
-      textarea.focus();
-    }, 0);
+    });
   };
 
   const handleBold = () => {
@@ -133,14 +137,14 @@ const NewPost = () => {
     const newContent = content.substring(0, start) + linkMarkdown + content.substring(end);
     setContent(newContent);
     
-    setTimeout(() => {
+    textarea.focus();
+    
+    requestAnimationFrame(() => {
       // Position cursor at the URL part for easy editing
       const urlStart = start + linkText.length + 3; // After [text](
       const urlEnd = urlStart + 19; // Length of "https://example.com"
-      textarea.selectionStart = urlStart;
-      textarea.selectionEnd = urlEnd;
-      textarea.focus();
-    }, 0);
+      textarea.setSelectionRange(urlStart, urlEnd);
+    });
   };
 
   const handleBulletList = () => {
@@ -154,11 +158,22 @@ const NewPost = () => {
     if (selectedText) {
       // Convert selected lines to bullet points
       const lines = selectedText.split('\n');
-      const bulletLines = lines.map(line => line.trim() ? `• ${line.trim()}` : line);
+      const bulletLines = lines.map(line => {
+        const trimmedLine = line.trim();
+        if (trimmedLine && !trimmedLine.startsWith('• ')) {
+          return `• ${trimmedLine}`;
+        }
+        return line;
+      });
       const bulletText = bulletLines.join('\n');
       
       const newContent = content.substring(0, start) + bulletText + content.substring(end);
       setContent(newContent);
+      
+      textarea.focus();
+      requestAnimationFrame(() => {
+        textarea.setSelectionRange(start, start + bulletText.length);
+      });
     } else {
       // Insert a new bullet point
       const beforeCursor = content.substring(0, start);
@@ -169,10 +184,11 @@ const NewPost = () => {
       const newContent = beforeCursor + bulletPoint + afterCursor;
       setContent(newContent);
       
-      setTimeout(() => {
-        textarea.selectionStart = textarea.selectionEnd = start + bulletPoint.length;
-        textarea.focus();
-      }, 0);
+      textarea.focus();
+      requestAnimationFrame(() => {
+        const newPos = start + bulletPoint.length;
+        textarea.setSelectionRange(newPos, newPos);
+      });
     }
   };
 
