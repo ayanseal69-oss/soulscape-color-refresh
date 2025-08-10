@@ -170,9 +170,85 @@ const NewPost = () => {
     navigate("/");
   };
 
-  const handlePublish = () => {
+  const handleSaveAsDraft = async () => {
+    if (!title.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter a title for your post",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (!content.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter some content for your post",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Convert images to base64 for storage
+    const imageDataUrls: string[] = [];
+    for (const image of selectedImages) {
+      const dataUrl = await new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target?.result as string);
+        reader.readAsDataURL(image);
+      });
+      imageDataUrls.push(dataUrl);
+    }
+
+    const postData = {
+      title,
+      content,
+      tags: tags.split(',').map(tag => tag.trim()),
+      images: imageDataUrls,
+      category,
+      status: "draft",
+      createdAt: new Date().toISOString()
+    };
+    
+    console.log("Saving draft:", postData);
+    
+    // Save to localStorage for demo purposes
+    const existingPosts = JSON.parse(localStorage.getItem('blog-posts') || '[]');
+    
+    let finalPost;
+    if (editingDraftId) {
+      // Update existing draft
+      const postIndex = existingPosts.findIndex((post: any) => post.id === editingDraftId);
+      if (postIndex !== -1) {
+        finalPost = { ...existingPosts[postIndex], ...postData };
+        existingPosts[postIndex] = finalPost;
+      } else {
+        finalPost = { ...postData, id: Date.now() };
+        existingPosts.push(finalPost);
+      }
+    } else {
+      // Create new draft
+      finalPost = { ...postData, id: Date.now() };
+      existingPosts.push(finalPost);
+    }
+    
+    localStorage.setItem('blog-posts', JSON.stringify(existingPosts));
+    
+    toast({
+      title: "Draft Saved",
+      description: `Draft "${title}" has been saved successfully`,
+    });
+    
+    // Set the editing draft ID so future saves update this draft
+    setEditingDraftId(finalPost.id);
+  };
+
+  const handlePublish = async () => {
+    // Set status to published and call the main save function
+    const tempStatus = status;
     setStatus("published");
-    setTimeout(() => handleSave(), 100);
+    await handleSave();
+    setStatus(tempStatus); // Reset status in case save fails
   };
 
   const handlePreview = () => {
@@ -237,9 +313,8 @@ const NewPost = () => {
             </Button>
             <Button 
               variant="outline"
-              onClick={() => {
-                setStatus("draft");
-                setTimeout(() => handleSave(), 100);
+              onClick={async () => {
+                await handleSaveAsDraft();
               }} 
               className="border-border/50 bg-card/80 backdrop-blur-sm hover:bg-card"
             >
