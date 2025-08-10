@@ -87,41 +87,46 @@ const NewPost = () => {
     }, 0);
   };
 
-  const applyFormatting = (prefix: string, suffix: string = '', placeholder: string = '') => {
+  const applyFormatting = (prefix: string, suffix: string = '') => {
     const textarea = textareaRef.current;
     if (!textarea) return;
 
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
     const selectedText = content.substring(start, end);
-    const textToWrap = selectedText || placeholder;
-    const formattedText = prefix + textToWrap + suffix;
     
-    const newContent = content.substring(0, start) + formattedText + content.substring(end);
-    setContent(newContent);
-    
-    // Focus first, then set cursor position
-    textarea.focus();
-    
-    // Use requestAnimationFrame for better timing
-    requestAnimationFrame(() => {
-      if (selectedText) {
-        // If text was selected, select the wrapped content
+    if (selectedText) {
+      // If text is selected, wrap it with formatting
+      const formattedText = prefix + selectedText + suffix;
+      const newContent = content.substring(0, start) + formattedText + content.substring(end);
+      setContent(newContent);
+      
+      textarea.focus();
+      requestAnimationFrame(() => {
+        // Select the formatted text
         textarea.setSelectionRange(start + prefix.length, start + prefix.length + selectedText.length);
-      } else {
-        // If no text was selected, place cursor after the placeholder text
-        const cursorPos = start + prefix.length + placeholder.length;
+      });
+    } else {
+      // If no text is selected, just insert the formatting markers
+      const formattedText = prefix + suffix;
+      const newContent = content.substring(0, start) + formattedText + content.substring(end);
+      setContent(newContent);
+      
+      textarea.focus();
+      requestAnimationFrame(() => {
+        // Place cursor between the formatting markers
+        const cursorPos = start + prefix.length;
         textarea.setSelectionRange(cursorPos, cursorPos);
-      }
-    });
+      });
+    }
   };
 
   const handleBold = () => {
-    applyFormatting('**', '**', 'bold text');
+    applyFormatting('**', '**');
   };
 
   const handleItalic = () => {
-    applyFormatting('*', '*', 'italic text');
+    applyFormatting('*', '*');
   };
 
   const handleLink = () => {
