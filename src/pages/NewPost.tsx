@@ -87,6 +87,95 @@ const NewPost = () => {
     }, 0);
   };
 
+  const applyFormatting = (prefix: string, suffix: string = '', placeholder: string = '') => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = content.substring(start, end);
+    const textToWrap = selectedText || placeholder;
+    const formattedText = prefix + textToWrap + suffix;
+    
+    const newContent = content.substring(0, start) + formattedText + content.substring(end);
+    setContent(newContent);
+    
+    // Set cursor position
+    setTimeout(() => {
+      if (selectedText) {
+        textarea.selectionStart = start + prefix.length;
+        textarea.selectionEnd = start + prefix.length + textToWrap.length;
+      } else {
+        textarea.selectionStart = textarea.selectionEnd = start + prefix.length + textToWrap.length;
+      }
+      textarea.focus();
+    }, 0);
+  };
+
+  const handleBold = () => {
+    applyFormatting('**', '**', 'bold text');
+  };
+
+  const handleItalic = () => {
+    applyFormatting('*', '*', 'italic text');
+  };
+
+  const handleLink = () => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = content.substring(start, end);
+    const linkText = selectedText || 'link text';
+    const linkMarkdown = `[${linkText}](https://example.com)`;
+    
+    const newContent = content.substring(0, start) + linkMarkdown + content.substring(end);
+    setContent(newContent);
+    
+    setTimeout(() => {
+      // Position cursor at the URL part for easy editing
+      const urlStart = start + linkText.length + 3; // After [text](
+      const urlEnd = urlStart + 19; // Length of "https://example.com"
+      textarea.selectionStart = urlStart;
+      textarea.selectionEnd = urlEnd;
+      textarea.focus();
+    }, 0);
+  };
+
+  const handleBulletList = () => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = content.substring(start, end);
+    
+    if (selectedText) {
+      // Convert selected lines to bullet points
+      const lines = selectedText.split('\n');
+      const bulletLines = lines.map(line => line.trim() ? `• ${line.trim()}` : line);
+      const bulletText = bulletLines.join('\n');
+      
+      const newContent = content.substring(0, start) + bulletText + content.substring(end);
+      setContent(newContent);
+    } else {
+      // Insert a new bullet point
+      const beforeCursor = content.substring(0, start);
+      const afterCursor = content.substring(end);
+      const needsNewLine = beforeCursor && !beforeCursor.endsWith('\n');
+      const bulletPoint = (needsNewLine ? '\n' : '') + '• ';
+      
+      const newContent = beforeCursor + bulletPoint + afterCursor;
+      setContent(newContent);
+      
+      setTimeout(() => {
+        textarea.selectionStart = textarea.selectionEnd = start + bulletPoint.length;
+        textarea.focus();
+      }, 0);
+    }
+  };
+
   const removeImage = (index: number) => {
     const newImages = selectedImages.filter((_, i) => i !== index);
     const newPreviewUrls = imagePreviewUrls.filter((_, i) => i !== index);
@@ -349,20 +438,20 @@ const NewPost = () => {
 
                 {/* Formatting Toolbar */}
                 <div className="flex gap-2 p-2 border border-border/50 rounded-lg bg-background/30">
-                  <Button variant="ghost" size="sm">
+                  <Button variant="ghost" size="sm" onClick={handleBold} title="Bold">
                     <Bold size={16} />
                   </Button>
-                  <Button variant="ghost" size="sm">
+                  <Button variant="ghost" size="sm" onClick={handleItalic} title="Italic">
                     <Italic size={16} />
                   </Button>
-                  <Button variant="ghost" size="sm">
+                  <Button variant="ghost" size="sm" onClick={handleLink} title="Insert Link">
                     <Link size={16} />
                   </Button>
-                  <Button variant="ghost" size="sm">
+                  <Button variant="ghost" size="sm" onClick={handleBulletList} title="Bullet List">
                     <List size={16} />
                   </Button>
                   <div className="ml-auto">
-                    <Button variant="ghost" size="sm" onClick={() => document.getElementById('image-upload')?.click()}>
+                    <Button variant="ghost" size="sm" onClick={() => document.getElementById('image-upload')?.click()} title="Insert Image">
                       <Image size={16} />
                     </Button>
                     <input
