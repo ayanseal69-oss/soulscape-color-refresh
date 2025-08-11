@@ -72,7 +72,7 @@ export default {
 				'gradient-sea': 'var(--gradient-sea)',
 				'gradient-wave': 'var(--gradient-wave)',
 				'gradient-texture': 'var(--gradient-texture)',
-				'organic-pattern': 'var(--organic-pattern)',
+				'organic-flow': 'var(--organic-flow)',
 			},
 			boxShadow: {
 				'wave': 'var(--wave-shadow)',

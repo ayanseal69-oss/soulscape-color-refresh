@@ -181,7 +181,7 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-sea relative">
+    <div className="min-h-screen bg-organic-flow relative">
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div 

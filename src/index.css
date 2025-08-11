@@ -8,7 +8,7 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Bright cyan 3D professional palette matching the uploaded image */
+    /* Flowing organic blue pattern palette from uploaded image */
     --background: 190 100% 97%;
     --foreground: 195 50% 10%;
 
@@ -39,36 +39,34 @@ All colors MUST be HSL.
 
     --radius: 0.75rem;
 
-    /* Bright cyan 3D flowing gradients inspired by the uploaded image */
+    /* Flowing organic blue pattern from uploaded image */
     --gradient-sea: linear-gradient(135deg, 
-      hsl(190, 100%, 65%) 0%, 
-      hsl(185, 95%, 60%) 15%, 
-      hsl(180, 90%, 55%) 35%, 
-      hsl(175, 85%, 50%) 55%, 
-      hsl(170, 80%, 45%) 75%, 
-      hsl(165, 75%, 40%) 100%);
+      hsl(195, 100%, 75%) 0%, 
+      hsl(190, 95%, 70%) 15%, 
+      hsl(185, 90%, 65%) 35%, 
+      hsl(180, 85%, 60%) 55%, 
+      hsl(175, 80%, 55%) 75%, 
+      hsl(170, 75%, 50%) 100%);
     --gradient-wave: linear-gradient(180deg, 
-      hsl(190, 80%, 75%) 0%, 
-      hsl(185, 75%, 70%) 25%, 
-      hsl(180, 70%, 65%) 50%, 
-      hsl(175, 65%, 60%) 75%, 
-      hsl(170, 60%, 55%) 100%);
+      hsl(195, 80%, 80%) 0%, 
+      hsl(190, 75%, 75%) 25%, 
+      hsl(185, 70%, 70%) 50%, 
+      hsl(180, 65%, 65%) 75%, 
+      hsl(175, 60%, 60%) 100%);
     --gradient-texture: radial-gradient(ellipse at 40% 30%, 
-      hsl(190, 100%, 70%) 0%, 
-      hsl(185, 95%, 65%) 20%, 
-      hsl(180, 90%, 60%) 40%, 
-      hsl(175, 85%, 55%) 60%, 
-      hsl(170, 80%, 50%) 80%, 
-      hsl(165, 75%, 45%) 100%);
-    --organic-pattern: radial-gradient(circle at 70% 80%, 
-      hsl(190, 100%, 60%) 0%, 
-      transparent 50%), 
-      radial-gradient(circle at 20% 20%, 
-      hsl(180, 90%, 55%) 0%, 
-      transparent 40%), 
-      radial-gradient(circle at 90% 40%, 
-      hsl(185, 95%, 65%) 0%, 
-      transparent 35%);
+      hsl(195, 100%, 75%) 0%, 
+      hsl(190, 95%, 70%) 20%, 
+      hsl(185, 90%, 65%) 40%, 
+      hsl(180, 85%, 60%) 60%, 
+      hsl(175, 80%, 55%) 80%, 
+      hsl(170, 75%, 50%) 100%);
+    --organic-flow: 
+      radial-gradient(ellipse 800px 400px at 25% 30%, hsl(195, 100%, 75%) 0%, transparent 60%),
+      radial-gradient(ellipse 600px 300px at 75% 60%, hsl(190, 95%, 70%) 0%, transparent 50%),
+      radial-gradient(ellipse 700px 350px at 10% 80%, hsl(185, 90%, 65%) 0%, transparent 55%),
+      radial-gradient(ellipse 500px 250px at 90% 20%, hsl(180, 85%, 60%) 0%, transparent 45%),
+      radial-gradient(ellipse 900px 450px at 60% 10%, hsl(175, 80%, 55%) 0%, transparent 65%),
+      linear-gradient(45deg, hsl(195, 100%, 85%) 0%, hsl(170, 75%, 45%) 100%);
     --wave-shadow: 0 20px 50px -15px hsl(190 100% 50% / 0.6);
     --spiritual-glow: 0 0 80px hsl(185 95% 60% / 0.7);
     --refined-shadow: 0 15px 40px -10px hsl(190 80% 55% / 0.5);
@@ -123,36 +121,34 @@ All colors MUST be HSL.
     --input: 195 30% 20%;
     --ring: 190 90% 65%;
 
-    /* Dark mode bright cyan 3D gradients */
+    /* Dark mode flowing organic blue pattern */
     --gradient-sea: linear-gradient(135deg, 
-      hsl(190, 80%, 30%) 0%, 
-      hsl(185, 75%, 28%) 15%, 
-      hsl(180, 70%, 25%) 35%, 
-      hsl(175, 65%, 22%) 55%, 
-      hsl(170, 60%, 18%) 75%, 
-      hsl(165, 55%, 15%) 100%);
+      hsl(195, 80%, 35%) 0%, 
+      hsl(190, 75%, 32%) 15%, 
+      hsl(185, 70%, 30%) 35%, 
+      hsl(180, 65%, 27%) 55%, 
+      hsl(175, 60%, 25%) 75%, 
+      hsl(170, 55%, 22%) 100%);
     --gradient-wave: linear-gradient(180deg, 
-      hsl(190, 60%, 20%) 0%, 
-      hsl(185, 55%, 25%) 25%, 
-      hsl(180, 50%, 30%) 50%, 
-      hsl(175, 45%, 32%) 75%, 
-      hsl(170, 40%, 35%) 100%);
+      hsl(195, 60%, 25%) 0%, 
+      hsl(190, 55%, 30%) 25%, 
+      hsl(185, 50%, 35%) 50%, 
+      hsl(180, 45%, 37%) 75%, 
+      hsl(175, 40%, 40%) 100%);
     --gradient-texture: radial-gradient(ellipse at 40% 30%, 
-      hsl(190, 80%, 25%) 0%, 
-      hsl(185, 75%, 22%) 20%, 
-      hsl(180, 70%, 20%) 40%, 
-      hsl(175, 65%, 18%) 60%, 
-      hsl(170, 60%, 15%) 80%, 
-      hsl(165, 55%, 12%) 100%);
-    --organic-pattern: radial-gradient(circle at 70% 80%, 
-      hsl(190, 80%, 25%) 0%, 
-      transparent 50%), 
-      radial-gradient(circle at 20% 20%, 
-      hsl(180, 70%, 20%) 0%, 
-      transparent 40%), 
-      radial-gradient(circle at 90% 40%, 
-      hsl(185, 75%, 28%) 0%, 
-      transparent 35%);
+      hsl(195, 80%, 30%) 0%, 
+      hsl(190, 75%, 27%) 20%, 
+      hsl(185, 70%, 25%) 40%, 
+      hsl(180, 65%, 23%) 60%, 
+      hsl(175, 60%, 20%) 80%, 
+      hsl(170, 55%, 17%) 100%);
+    --organic-flow: 
+      radial-gradient(ellipse 800px 400px at 25% 30%, hsl(195, 80%, 30%) 0%, transparent 60%),
+      radial-gradient(ellipse 600px 300px at 75% 60%, hsl(190, 75%, 27%) 0%, transparent 50%),
+      radial-gradient(ellipse 700px 350px at 10% 80%, hsl(185, 70%, 25%) 0%, transparent 55%),
+      radial-gradient(ellipse 500px 250px at 90% 20%, hsl(180, 65%, 23%) 0%, transparent 45%),
+      radial-gradient(ellipse 900px 450px at 60% 10%, hsl(175, 60%, 20%) 0%, transparent 65%),
+      linear-gradient(45deg, hsl(195, 80%, 40%) 0%, hsl(170, 55%, 15%) 100%);
     --wave-shadow: 0 20px 50px -15px hsl(190 80% 20% / 0.8);
     --spiritual-glow: 0 0 80px hsl(185 75% 30% / 0.9);
     --refined-shadow: 0 15px 40px -10px hsl(190 70% 25% / 0.7);
