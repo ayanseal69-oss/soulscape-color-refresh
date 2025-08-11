@@ -398,7 +398,8 @@ const NewPost = () => {
 
   return (
     <div className="min-h-screen bg-gradient-texture relative">
-      <div className="absolute inset-0 bg-gradient-sea opacity-60"></div>
+      <div className="absolute inset-0 bg-organic-pattern opacity-40"></div>
+      <div className="absolute inset-0 bg-gradient-sea opacity-70"></div>
       <div className="relative container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex flex-col gap-4 mb-8 lg:flex-row lg:items-center lg:justify-between">
