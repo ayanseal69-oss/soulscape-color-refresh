@@ -71,10 +71,12 @@ export default {
 			backgroundImage: {
 				'gradient-sea': 'var(--gradient-sea)',
 				'gradient-wave': 'var(--gradient-wave)',
+				'gradient-texture': 'var(--gradient-texture)',
 			},
 			boxShadow: {
 				'wave': 'var(--wave-shadow)',
 				'spiritual': 'var(--spiritual-glow)',
+				'refined': 'var(--refined-shadow)',
 			},
 			keyframes: {
 				'accordion-down': {

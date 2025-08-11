@@ -101,23 +101,24 @@ const NewPost = () => {
       const newContent = content.substring(0, start) + formattedText + content.substring(end);
       setContent(newContent);
       
-      textarea.focus();
-      requestAnimationFrame(() => {
-        // Select the formatted text
-        textarea.setSelectionRange(start + prefix.length, start + prefix.length + selectedText.length);
-      });
+      // Set cursor position after the formatted text
+      setTimeout(() => {
+        textarea.focus();
+        const newCursorPos = start + formattedText.length;
+        textarea.setSelectionRange(newCursorPos, newCursorPos);
+      }, 10);
     } else {
       // If no text is selected, just insert the formatting markers
       const formattedText = prefix + suffix;
       const newContent = content.substring(0, start) + formattedText + content.substring(end);
       setContent(newContent);
       
-      textarea.focus();
-      requestAnimationFrame(() => {
-        // Place cursor between the formatting markers
+      // Place cursor between the formatting markers
+      setTimeout(() => {
+        textarea.focus();
         const cursorPos = start + prefix.length;
         textarea.setSelectionRange(cursorPos, cursorPos);
-      });
+      }, 10);
     }
   };
 
@@ -396,8 +397,9 @@ const NewPost = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-sea">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-gradient-texture relative">
+      <div className="absolute inset-0 bg-gradient-sea opacity-60"></div>
+      <div className="relative container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex flex-col gap-4 mb-8 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
@@ -441,7 +443,7 @@ const NewPost = () => {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Main Editor */}
           <div className="lg:col-span-2 space-y-6">
-            <Card className="bg-card/80 backdrop-blur-sm border-border/50">
+            <Card className="bg-card/90 backdrop-blur-md border-border/40 shadow-refined">
               <CardHeader>
                 <CardTitle className="text-card-foreground">Post Content</CardTitle>
               </CardHeader>
@@ -508,7 +510,7 @@ const NewPost = () => {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            <Card className="bg-card/80 backdrop-blur-sm border-border/50">
+            <Card className="bg-card/90 backdrop-blur-md border-border/40 shadow-refined">
               <CardHeader>
                 <CardTitle className="text-card-foreground">Post Settings</CardTitle>
               </CardHeader>
@@ -554,7 +556,7 @@ const NewPost = () => {
               </CardContent>
             </Card>
 
-            <Card className="bg-card/80 backdrop-blur-sm border-border/50">
+            <Card className="bg-card/90 backdrop-blur-md border-border/40 shadow-refined">
               <CardHeader>
                 <CardTitle className="text-card-foreground">Quick Tips</CardTitle>
               </CardHeader>

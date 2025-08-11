@@ -8,41 +8,55 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 186 100% 15%;
+    /* Refined spiritual sky blue palette */
+    --background: 200 25% 98%;
+    --foreground: 210 30% 25%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 186 100% 15%;
+    --card: 195 20% 96%;
+    --card-foreground: 210 30% 25%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 186 100% 15%;
+    --popover: 195 20% 96%;
+    --popover-foreground: 210 30% 25%;
 
-    --primary: 186 100% 25%;
+    --primary: 200 65% 45%;
     --primary-foreground: 0 0% 98%;
 
-    --secondary: 174 44% 87%;
-    --secondary-foreground: 186 100% 20%;
+    --secondary: 195 40% 88%;
+    --secondary-foreground: 210 30% 30%;
 
-    --muted: 174 44% 87%;
-    --muted-foreground: 186 50% 35%;
+    --muted: 195 35% 90%;
+    --muted-foreground: 210 25% 45%;
 
-    --accent: 180 100% 85%;
-    --accent-foreground: 186 100% 20%;
+    --accent: 185 50% 85%;
+    --accent-foreground: 210 30% 30%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 174 30% 85%;
-    --input: 174 30% 85%;
-    --ring: 186 100% 25%;
+    --border: 195 25% 88%;
+    --input: 195 25% 88%;
+    --ring: 200 65% 45%;
 
     --radius: 0.5rem;
 
-    /* Sea green gradients and effects */
-    --gradient-sea: linear-gradient(135deg, hsl(174, 100%, 75%) 0%, hsl(186, 100%, 60%) 50%, hsl(200, 100%, 45%) 100%);
-    --gradient-wave: linear-gradient(180deg, hsl(174, 100%, 85%) 0%, hsl(186, 100%, 70%) 50%, hsl(200, 100%, 55%) 100%);
-    --wave-shadow: 0 10px 30px -10px hsl(186 100% 25% / 0.3);
-    --spiritual-glow: 0 0 40px hsl(174 100% 75% / 0.4);
+    /* Refined spiritual gradients with texture */
+    --gradient-sea: linear-gradient(135deg, 
+      hsl(200, 70%, 85%) 0%, 
+      hsl(190, 60%, 75%) 25%, 
+      hsl(180, 50%, 70%) 50%, 
+      hsl(170, 45%, 65%) 75%, 
+      hsl(160, 40%, 60%) 100%);
+    --gradient-wave: linear-gradient(180deg, 
+      hsl(200, 50%, 92%) 0%, 
+      hsl(190, 45%, 85%) 50%, 
+      hsl(180, 40%, 78%) 100%);
+    --gradient-texture: radial-gradient(circle at 30% 70%, 
+      hsl(200, 40%, 90%) 0%, 
+      hsl(190, 35%, 85%) 50%, 
+      hsl(180, 30%, 80%) 100%);
+    --wave-shadow: 0 15px 35px -10px hsl(200 60% 45% / 0.25);
+    --spiritual-glow: 0 0 50px hsl(190 50% 75% / 0.35);
+    --refined-shadow: 0 8px 25px -5px hsl(200 40% 60% / 0.2);
 
     --sidebar-background: 0 0% 98%;
 
@@ -62,39 +76,53 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 186 100% 8%;
-    --foreground: 174 100% 85%;
+    /* Dark mode spiritual sky blue palette */
+    --background: 210 25% 12%;
+    --foreground: 200 40% 85%;
 
-    --card: 186 100% 10%;
-    --card-foreground: 174 100% 85%;
+    --card: 210 20% 15%;
+    --card-foreground: 200 40% 85%;
 
-    --popover: 186 100% 10%;
-    --popover-foreground: 174 100% 85%;
+    --popover: 210 20% 15%;
+    --popover-foreground: 200 40% 85%;
 
-    --primary: 174 100% 70%;
-    --primary-foreground: 186 100% 8%;
+    --primary: 190 60% 65%;
+    --primary-foreground: 210 25% 12%;
 
-    --secondary: 186 50% 20%;
-    --secondary-foreground: 174 100% 85%;
+    --secondary: 210 30% 22%;
+    --secondary-foreground: 200 40% 85%;
 
-    --muted: 186 50% 20%;
-    --muted-foreground: 174 50% 65%;
+    --muted: 210 25% 20%;
+    --muted-foreground: 200 30% 65%;
 
-    --accent: 180 70% 25%;
-    --accent-foreground: 174 100% 85%;
+    --accent: 200 45% 28%;
+    --accent-foreground: 200 40% 85%;
 
     --destructive: 0 62.8% 50%;
-    --destructive-foreground: 174 100% 85%;
+    --destructive-foreground: 200 40% 85%;
 
-    --border: 186 30% 25%;
-    --input: 186 30% 25%;
-    --ring: 174 100% 70%;
+    --border: 210 20% 25%;
+    --input: 210 20% 25%;
+    --ring: 190 60% 65%;
 
-    /* Dark mode sea green gradients */
-    --gradient-sea: linear-gradient(135deg, hsl(186, 100%, 20%) 0%, hsl(174, 100%, 30%) 50%, hsl(160, 100%, 25%) 100%);
-    --gradient-wave: linear-gradient(180deg, hsl(186, 100%, 15%) 0%, hsl(174, 100%, 25%) 50%, hsl(160, 100%, 20%) 100%);
-    --wave-shadow: 0 10px 30px -10px hsl(174 100% 30% / 0.5);
-    --spiritual-glow: 0 0 40px hsl(174 100% 40% / 0.6);
+    /* Dark mode refined spiritual gradients */
+    --gradient-sea: linear-gradient(135deg, 
+      hsl(210, 40%, 18%) 0%, 
+      hsl(200, 35%, 22%) 25%, 
+      hsl(190, 30%, 25%) 50%, 
+      hsl(180, 25%, 28%) 75%, 
+      hsl(170, 20%, 30%) 100%);
+    --gradient-wave: linear-gradient(180deg, 
+      hsl(210, 30%, 16%) 0%, 
+      hsl(200, 25%, 20%) 50%, 
+      hsl(190, 20%, 24%) 100%);
+    --gradient-texture: radial-gradient(circle at 30% 70%, 
+      hsl(210, 25%, 20%) 0%, 
+      hsl(200, 20%, 18%) 50%, 
+      hsl(190, 15%, 16%) 100%);
+    --wave-shadow: 0 15px 35px -10px hsl(200 50% 25% / 0.4);
+    --spiritual-glow: 0 0 50px hsl(190 40% 35% / 0.5);
+    --refined-shadow: 0 8px 25px -5px hsl(200 30% 30% / 0.3);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
