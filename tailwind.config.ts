@@ -78,6 +78,9 @@ export default {
 				'wave': 'var(--wave-shadow)',
 				'spiritual': 'var(--spiritual-glow)',
 				'refined': 'var(--refined-shadow)',
+				'floating': 'var(--floating-shadow)',
+				'depth': 'var(--depth-shadow)',
+				'glow-border': 'var(--glow-border)',
 			},
 			keyframes: {
 				'accordion-down': {
